@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-
+using MySql.Data.MySqlClient;
 namespace Quizmester
 {
     public partial class MainWindow : Window
@@ -10,6 +10,9 @@ namespace Quizmester
             LoginScreen,
             CreateAccountScreen
         }
+
+        string connectionString = "Server=localhost;Database=quizmester;Uid=root;Pwd=;";
+
 
         private void ShowScreen(CurrentScreen screen)
         {
@@ -32,11 +35,11 @@ namespace Quizmester
                     break;
             }
         }
-
         public MainWindow()
         {
             InitializeComponent();
             ShowScreen(CurrentScreen.WelcomeScreen);
+            TestConnection();
         }
 
         private void LoginButton(object sender, RoutedEventArgs e)
@@ -51,5 +54,62 @@ namespace Quizmester
         {
             ShowScreen(CurrentScreen.CreateAccountScreen);
         }
+
+        private void TestConnection()
+        {
+            string connectionString = "Server=localhost;Database=quizmester;Uid=root;Pwd=;";
+
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    MessageBox.Show("Connected to MySQL!");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
+            }
+        }
+
+        private void InsertCreateAccountButton(object sender, RoutedEventArgs e)
+        {
+            string user = CreateUsernameBox.Text;
+            string pass = CreatePasswordBox.Password;
+
+            string sql = "INSERT INTO users (UserName, UserPassword) VALUES (@user, @pass)";
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@user", user);
+                        cmd.Parameters.AddWithValue("@pass", pass);
+
+                        int rows = cmd.ExecuteNonQuery(); // Executes the INSERT
+                        if (rows > 0)
+                        {
+                            MessageBox.Show("Account created successfully!");
+                            ShowScreen(CurrentScreen.WelcomeScreen);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Something went wrong.");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
+            }
+        }
+
+
     }
 }
