@@ -4,6 +4,7 @@ namespace Quizmester
 {
     public partial class MainWindow : Window
     {
+        // Enum to track current screen
         private enum CurrentScreen
         {
             WelcomeScreen,
@@ -11,8 +12,57 @@ namespace Quizmester
             CreateAccountScreen
         }
 
+        // Database connection string
         string connectionString = "Server=localhost;Database=quizmester;Uid=root;Pwd=;";
 
+        public MainWindow()
+        {
+            InitializeComponent();
+            // Start with the welcome screen
+            ShowScreen(CurrentScreen.WelcomeScreen);
+            // test the database connection as soon as the application starts
+            TestConnection();
+        }
+        //testing database connection
+        #region Debugging
+        private void TestConnection()
+        {
+            string connectionString = "Server=localhost;Database=quizmester;Uid=root;Pwd=;";
+
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    MessageBox.Show("Connected to MySQL!");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
+            }
+        }
+        #endregion
+        // page navigation
+        #region navigation
+
+        private void ExitApplicationButton(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+        private void LoginButton(object sender, RoutedEventArgs e)
+        {
+            ShowScreen(CurrentScreen.LoginScreen);
+        }
+        private void BackButton(object sender, RoutedEventArgs e)
+        {
+            ShowScreen(CurrentScreen.WelcomeScreen);
+        }
+        private void CreateAccountButton(object sender, RoutedEventArgs e)
+        {
+            ShowScreen(CurrentScreen.CreateAccountScreen);
+        }
 
         private void ShowScreen(CurrentScreen screen)
         {
@@ -35,44 +85,10 @@ namespace Quizmester
                     break;
             }
         }
-        public MainWindow()
-        {
-            InitializeComponent();
-            ShowScreen(CurrentScreen.WelcomeScreen);
-            TestConnection();
-        }
 
-        private void LoginButton(object sender, RoutedEventArgs e)
-        {
-            ShowScreen(CurrentScreen.LoginScreen);
-        }
-        private void BackButton(object sender, RoutedEventArgs e)
-        {
-            ShowScreen(CurrentScreen.WelcomeScreen);
-        }
-        private void CreateAccountButton(object sender, RoutedEventArgs e)
-        {
-            ShowScreen(CurrentScreen.CreateAccountScreen);
-        }
-
-        private void TestConnection()
-        {
-            string connectionString = "Server=localhost;Database=quizmester;Uid=root;Pwd=;";
-
-
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                try
-                {
-                    conn.Open();
-                    MessageBox.Show("Connected to MySQL!");
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error: " + ex.Message);
-                }
-            }
-        }
+        #endregion
+        //enter login credentials into database
+        #region Login and Account Creation
 
         private void InsertCreateAccountButton(object sender, RoutedEventArgs e)
         {
@@ -91,10 +107,12 @@ namespace Quizmester
                         cmd.Parameters.AddWithValue("@user", user);
                         cmd.Parameters.AddWithValue("@pass", pass);
 
-                        int rows = cmd.ExecuteNonQuery(); // Executes the INSERT
+                        int rows = cmd.ExecuteNonQuery(); // Execute
                         if (rows > 0)
                         {
                             MessageBox.Show("Account created successfully!");
+                            CreateUsernameBox.Text = "";
+                            CreatePasswordBox.Password = "";
                             ShowScreen(CurrentScreen.WelcomeScreen);
                         }
                         else
@@ -110,6 +128,6 @@ namespace Quizmester
             }
         }
 
-
+        #endregion
     }
 }

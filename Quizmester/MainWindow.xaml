@@ -19,7 +19,26 @@
                     <GradientStop Color="#3C3C8C" Offset="1" />
                 </LinearGradientBrush>
             </Grid.Background>
+            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Margin="20">
+                <Border CornerRadius="20"
+                        Width="100"
+                        Height="100"
+                        Background="White">
 
+                    <Button Content="X"
+                            Width="100"
+                            Height="100"
+                            FontSize="72"
+                            FontWeight="SemiBold"
+                            Cursor="Hand"
+                            Foreground="LightGray"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            Click="ExitApplicationButton"
+                            />
+                    
+                </Border>
+            </StackPanel>
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="Welcome to Quizmester!"
                            FontSize="72"
@@ -156,7 +175,7 @@
                     Padding="30" 
                     Width="350" 
                     HorizontalAlignment="Center" 
-                    VerticalAlignment="Center"> 
+                    VerticalAlignment="Center">
                 <StackPanel>
                     <!-- Title -->
                     <TextBlock Text="Login"
