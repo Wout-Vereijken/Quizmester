@@ -12,7 +12,7 @@
 
     <Grid>
         <!-- Welcome Screen -->
-        <Grid x:Name="WelcomeScreen" Visibility="Visible">
+        <Grid x:Name="WelcomeScreen" Visibility="Collapsed">
             <Grid.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                     <GradientStop Color="#9494EC" Offset="0" />
@@ -144,7 +144,8 @@
                             BorderBrush="Transparent"
                             Cursor="Hand"
                             HorizontalAlignment="Stretch"
-                            Margin="0,10,0,0"/>
+                            Margin="0,10,0,0"
+                            Click="InsertLoginButton"/>
 
                     <Button Content="Back "
                             Height="40"
@@ -239,6 +240,7 @@
                 </StackPanel>
             </Border>
         </Grid>
+        <Grid x:Name="QuizChoiceScreen" Visibility="Visible"/>
         <Grid x:Name="QuizScreen" Visibility="Collapsed"/>
         <Grid x:Name="AdminScreen" Visibility="Collapsed"/>
     </Grid>

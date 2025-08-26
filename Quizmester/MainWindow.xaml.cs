@@ -128,6 +128,64 @@ namespace Quizmester
             }
         }
 
-        #endregion
+        private void InsertLoginButton(object sender, RoutedEventArgs e)
+        {
+            // Use the correct TextBoxes for login
+            string user = UsernameBox.Text;
+            string pass = PasswordBox.Password;
+
+            // Placeholder for admin check logic
+            bool isAdmin = false; 
+
+            string sql = "SELECT COUNT(*) FROM users WHERE UserName = @user AND UserPassword = @pass";
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@user", user);
+                        cmd.Parameters.AddWithValue("@pass", pass);
+
+                        int count = Convert.ToInt32(cmd.ExecuteScalar());
+
+                        if (count > 0)
+                        {
+                            MessageBox.Show("Login successful!");
+                            UsernameBox.Text = "";
+                            PasswordBox.Password = "";
+                            
+                            // TODO: Navigate to quiz screen or admin screen
+                            if (isAdmin)
+                            {
+                                // Navigate to admin screen
+                                ShowScreen(CurrentScreen.WelcomeScreen);
+                            }
+                            else
+                            {
+                                // Navigate to user quiz screen
+                                ShowScreen(CurrentScreen.WelcomeScreen);
+                            }
+                            // Navigate to quiz screen
+                            
+                        }
+                        else
+                        {
+                            MessageBox.Show("Invalid username or password.");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
+            }
+        }
+
     }
+
+    #endregion
 }
+
