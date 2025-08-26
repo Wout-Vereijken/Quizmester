@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
+using Google.Protobuf.Reflection;
 using MySql.Data.MySqlClient;
 namespace Quizmester
 {
@@ -9,7 +11,8 @@ namespace Quizmester
         {
             WelcomeScreen,
             LoginScreen,
-            CreateAccountScreen
+            CreateAccountScreen,
+            QuizChoiceScreen
         }
 
         // Database connection string
@@ -70,6 +73,7 @@ namespace Quizmester
             WelcomeScreen.Visibility = Visibility.Collapsed;
             LoginScreen.Visibility = Visibility.Collapsed;
             CreateAccountScreen.Visibility = Visibility.Collapsed;
+            QuizChoiceScreen.Visibility = Visibility.Collapsed;
 
             // Show selected screen
             switch (screen)
@@ -82,6 +86,9 @@ namespace Quizmester
                     break;
                 case CurrentScreen.CreateAccountScreen:
                     CreateAccountScreen.Visibility = Visibility.Visible;
+                    break;
+                case CurrentScreen.QuizChoiceScreen:
+                    QuizChoiceScreen.Visibility = Visibility.Visible;
                     break;
             }
         }
@@ -135,7 +142,7 @@ namespace Quizmester
             string pass = PasswordBox.Password;
 
             // Placeholder for admin check logic
-            bool isAdmin = false; 
+            bool isAdmin = false;
 
             string sql = "SELECT COUNT(*) FROM users WHERE UserName = @user AND UserPassword = @pass";
 
@@ -156,7 +163,7 @@ namespace Quizmester
                             MessageBox.Show("Login successful!");
                             UsernameBox.Text = "";
                             PasswordBox.Password = "";
-                            
+
                             // TODO: Navigate to quiz screen or admin screen
                             if (isAdmin)
                             {
@@ -165,11 +172,13 @@ namespace Quizmester
                             }
                             else
                             {
+                                // Load quizzes for regular user
+                                LoadQuizList();
                                 // Navigate to user quiz screen
-                                ShowScreen(CurrentScreen.WelcomeScreen);
+                                ShowScreen(CurrentScreen.QuizChoiceScreen);
                             }
                             // Navigate to quiz screen
-                            
+
                         }
                         else
                         {
@@ -184,8 +193,42 @@ namespace Quizmester
             }
         }
 
+
+
+        #endregion
+        //quiz list box items
+        #region Quiz List
+        private void LoadQuizList()
+        {
+            string sql = "SELECT DISTINCT QuizName FROM quiz";
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        string allCategories = "";
+                        while (reader.Read())
+                        {
+                            allCategories += reader.GetString("QuizName") + "\n";
+                        }
+
+                        MessageBox.Show("Available Quizzes:\n" + allCategories);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
+            }
+        }
+
     }
-
     #endregion
-}
 
+
+
+}

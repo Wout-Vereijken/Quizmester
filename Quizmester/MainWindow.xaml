@@ -240,8 +240,57 @@
                 </StackPanel>
             </Border>
         </Grid>
-        <Grid x:Name="QuizChoiceScreen" Visibility="Visible"/>
+        <Grid x:Name="QuizChoiceScreen" Visibility="Visible">
+            <!-- Background on the Grid -->
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="Black" Offset="0" />
+                    <GradientStop Color="#3b4252" Offset="1" />
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <!-- Scrollable content -->
+            <ScrollViewer VerticalScrollBarVisibility="Auto" VerticalAlignment="Top">
+                <StackPanel>
+                    <!-- Hero section -->
+                    <Grid Height="400">
+                        <Grid.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#9494EC" Offset="0" />
+                                <GradientStop Color="#3C3C8C" Offset="1" />
+                            </LinearGradientBrush>
+                        </Grid.Background>
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="Choose Your Quiz Adventure"
+                           FontSize="48"
+                           FontWeight="Bold"
+                           Foreground="White"
+                           Margin="0,20,0,20"/>
+
+                            <TextBlock Text="Select a quiz from the options below:"
+                           FontSize="24"
+                           Foreground="White"
+                           Margin="0,0,0,20"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Next block -->
+                    <Grid Height="300" Background="Transparent">
+                        <ListBox x:Name="QuizListbox">
+                            
+                        </ListBox>
+                    </Grid>
+
+
+                </StackPanel>
+            </ScrollViewer>
+
+
+        </Grid>
+
         <Grid x:Name="QuizScreen" Visibility="Collapsed"/>
         <Grid x:Name="AdminScreen" Visibility="Collapsed"/>
+
+
     </Grid>
 </Window>
