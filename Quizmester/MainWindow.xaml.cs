@@ -25,6 +25,8 @@ namespace Quizmester
             ShowScreen(CurrentScreen.WelcomeScreen);
             // test the database connection as soon as the application starts
             TestConnection();
+            // Set DataContext for data binding
+            DataContext = new Quiz(); 
         }
         //testing database connection
         #region Debugging
@@ -49,7 +51,7 @@ namespace Quizmester
         #endregion
         // page navigation
         #region navigation
-
+        
         private void ExitApplicationButton(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
@@ -173,7 +175,7 @@ namespace Quizmester
                             else
                             {
                                 // Load quizzes for regular user
-                                LoadQuizList();
+                                //LoadQuizList();
                                 // Navigate to user quiz screen
                                 ShowScreen(CurrentScreen.QuizChoiceScreen);
                             }
@@ -192,43 +194,6 @@ namespace Quizmester
                 }
             }
         }
-
-
-
         #endregion
-        //quiz list box items
-        #region Quiz List
-        private void LoadQuizList()
-        {
-            string sql = "SELECT DISTINCT QuizName FROM quiz";
-
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                try
-                {
-                    conn.Open();
-                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        string allCategories = "";
-                        while (reader.Read())
-                        {
-                            allCategories += reader.GetString("QuizName") + "\n";
-                        }
-
-                        MessageBox.Show("Available Quizzes:\n" + allCategories);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error: " + ex.Message);
-                }
-            }
-        }
-
     }
-    #endregion
-
-
-
 }
