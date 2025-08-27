@@ -26,7 +26,7 @@ namespace Quizmester
             // test the database connection as soon as the application starts
             TestConnection();
             // Set DataContext for data binding
-            DataContext = new Quiz(); 
+            DataContext = new Quiz();
         }
         //testing database connection
         #region Debugging
@@ -51,7 +51,7 @@ namespace Quizmester
         #endregion
         // page navigation
         #region navigation
-        
+
         private void ExitApplicationButton(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
@@ -194,6 +194,24 @@ namespace Quizmester
                 }
             }
         }
+        #endregion
+
+        #region start quiz
+
+        private void OnStartQuiz(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.CommandParameter is string quizId)
+            {
+                MessageBox.Show($"Starting quiz with ID: {quizId}");
+            }
+            else
+            {
+                MessageBox.Show("Not working");
+            }
+        }
+
+
+
         #endregion
     }
 }

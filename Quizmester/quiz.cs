@@ -2,7 +2,8 @@
 using System;
 using System.Collections.ObjectModel; // Needed for ObservableCollection
 using System.Windows;
-using System.Linq; // Needed for .Select() when joining strings
+using System.Linq;
+using Org.BouncyCastle.Bcpg; // Needed for .Select() when joining strings
 
 namespace Quizmester
 {
@@ -11,6 +12,8 @@ namespace Quizmester
     {
         public string QuizTitle { get; set; }       // Title of the quiz
         public string QuizDescription { get; set; } // Description of the quiz
+
+        public string QuizId { get; set; } // ID of the quiz
     }
 
     // Class to handle retrieving quizzes from the database
@@ -29,7 +32,7 @@ namespace Quizmester
             _QuizChoice = new ObservableCollection<QuizChoice>();
 
             // SQL query to get all quiz titles and descriptions
-            string sql = "SELECT QuizTitle, QuizDescription FROM quizzes";
+            string sql = "SELECT QuizTitle, QuizDescription, QuizId FROM quizzes";
 
             // Open a connection to the database
             using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -48,17 +51,20 @@ namespace Quizmester
                             // Read each column value by column name
                             string title = reader.GetString("QuizTitle");
                             string description = reader.GetString("QuizDescription");
+                            string QuizId = reader.GetInt32("QuizId").ToString();
+
 
                             // Add the quiz to the collection
                             _QuizChoice.Add(new QuizChoice
                             {
                                 QuizTitle = title,
-                                QuizDescription = description
+                                QuizDescription = description,
+                                QuizId = QuizId
                             });
                         }
                     }
 
-                    // Optional: show all quizzes in a MessageBox
+                    //show all quizzes in a MessageBox
                     string allCategories = string.Join("\n",
                         _QuizChoice.Select(q => $"{q.QuizTitle}: {q.QuizDescription}"));
 

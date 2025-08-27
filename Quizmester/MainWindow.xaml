@@ -36,7 +36,7 @@
                             BorderBrush="Transparent"
                             Click="ExitApplicationButton"
                             />
-                    
+
                 </Border>
             </StackPanel>
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -162,7 +162,7 @@
             </Border>
         </Grid>
 
-        <!-- Other Screens -->
+        <!-- create account Screens -->
         <Grid x:Name="CreateAccountScreen" Visibility="Collapsed">
             <Grid.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -240,12 +240,14 @@
                 </StackPanel>
             </Border>
         </Grid>
-        <Grid x:Name="QuizChoiceScreen" Visibility="Visible">
+
+        <!-- Quiz Choice Screen -->
+        <Grid x:Name="QuizChoiceScreen" Visibility="Collapsed">
             <!-- Background on the Grid -->
             <Grid.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="White" Offset="0" />
-                    <GradientStop Color="#3b4252" Offset="1" />
+                    <GradientStop Color="Black" Offset="0" />
+                    <GradientStop Color="#00003f" Offset="1" />
                 </LinearGradientBrush>
             </Grid.Background>
 
@@ -290,35 +292,32 @@
                                     <StackPanel Width="500">
                                         <TextBlock Text="{Binding QuizTitle}" FontSize="20" FontWeight="Bold" Foreground="Black"/>
                                         <TextBlock Text="{Binding QuizDescription}" FontSize="14" Foreground="Gray"/>
+                                        <TextBlock x:Name="QuizId" Text="{Binding QuizId}" FontSize="14" Foreground="Gray"/>
                                         <Button Content="Start Quiz"
-                                                Width="120"
-                                                Height="40"
-                                                FontSize="16"
-                                                FontWeight="SemiBold"
-                                                Foreground="White"
-                                                Background="#5A5AFF"
-                                                BorderBrush="Transparent"
-                                                Cursor="Hand"
-                                                HorizontalAlignment="Center"
-                                                Margin="10,20,10,0"
-                                                Command="{Binding DataContext.StartQuizCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                CommandParameter="{Binding}"/>
+                                            Width="120"
+                                            Height="40"
+                                            FontSize="16"
+                                            FontWeight="SemiBold"
+                                            Foreground="White"
+                                            Background="#5A5AFF"
+                                            BorderBrush="Transparent"
+                                            Cursor="Hand"
+                                            HorizontalAlignment="Center"
+                                            Margin="10,20,10,0"
+                                            Click="OnStartQuiz"
+                                            CommandParameter="{Binding QuizId}"/>
                                     </StackPanel>
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-
-
-
-
                 </StackPanel>
             </ScrollViewer>
-
+        </Grid>
+        <!-- Quiz screen -->
+        <Grid x:Name="QuizScreen" Visibility="Visible">
 
         </Grid>
-
-        <Grid x:Name="QuizScreen" Visibility="Collapsed"/>
         <Grid x:Name="AdminScreen" Visibility="Collapsed"/>
 
 
