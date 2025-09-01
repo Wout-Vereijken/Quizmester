@@ -12,7 +12,8 @@ namespace Quizmester
             WelcomeScreen,
             LoginScreen,
             CreateAccountScreen,
-            QuizChoiceScreen
+            QuizChoiceScreen,
+            QuizScreen
         }
 
         // Database connection string
@@ -76,6 +77,7 @@ namespace Quizmester
             LoginScreen.Visibility = Visibility.Collapsed;
             CreateAccountScreen.Visibility = Visibility.Collapsed;
             QuizChoiceScreen.Visibility = Visibility.Collapsed;
+            QuizScreen.Visibility = Visibility.Collapsed;
 
             // Show selected screen
             switch (screen)
@@ -91,6 +93,9 @@ namespace Quizmester
                     break;
                 case CurrentScreen.QuizChoiceScreen:
                     QuizChoiceScreen.Visibility = Visibility.Visible;
+                    break;
+                case CurrentScreen.QuizScreen:
+                    QuizScreen.Visibility = Visibility.Visible;
                     break;
             }
         }
@@ -231,6 +236,7 @@ namespace Quizmester
             if (sender is Button button && button.CommandParameter is string quizId)
             {
                 MessageBox.Show($"Starting quiz with ID: {quizId}");
+                ShowScreen(CurrentScreen.QuizScreen);
             }
             else
             {

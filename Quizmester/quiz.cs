@@ -12,7 +12,6 @@ namespace Quizmester
     {
         public string QuizTitle { get; set; }       // Title of the quiz
         public string QuizDescription { get; set; } // Description of the quiz
-
         public string QuizId { get; set; } // ID of the quiz
     }
 
