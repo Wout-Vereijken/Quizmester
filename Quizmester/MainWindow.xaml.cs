@@ -104,19 +104,40 @@ namespace Quizmester
             string user = CreateUsernameBox.Text;
             string pass = CreatePasswordBox.Password;
 
-            string sql = "INSERT INTO users (UserName, UserPassword) VALUES (@user, @pass)";
+            if (string.IsNullOrWhiteSpace(user) || string.IsNullOrWhiteSpace(pass))
+            {
+                MessageBox.Show("Please enter both username and password.");
+                return;
+            }
 
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
                 try
                 {
                     conn.Open();
+
+                    // Check if username exists
+                    string checkSql = "SELECT COUNT(*) FROM users WHERE UserName = @user";
+                    using (MySqlCommand checkCmd = new MySqlCommand(checkSql, conn))
+                    {
+                        checkCmd.Parameters.AddWithValue("@user", user);
+
+                        int count = Convert.ToInt32(checkCmd.ExecuteScalar());
+                        if (count > 0)
+                        {
+                            MessageBox.Show("This username is already taken. Please choose another one.");
+                            return;
+                        }
+                    }
+
+                    // Insert if username doesn't exist
+                    string sql = "INSERT INTO users (UserName, UserPassword) VALUES (@user, @pass)";
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@user", user);
                         cmd.Parameters.AddWithValue("@pass", pass);
 
-                        int rows = cmd.ExecuteNonQuery(); // Execute
+                        int rows = cmd.ExecuteNonQuery();
                         if (rows > 0)
                         {
                             MessageBox.Show("Account created successfully!");
@@ -137,12 +158,19 @@ namespace Quizmester
             }
         }
 
+
         private void InsertLoginButton(object sender, RoutedEventArgs e)
         {
             // Use the correct TextBoxes for login
             string user = UsernameBox.Text;
             string pass = PasswordBox.Password;
 
+
+            if (string.IsNullOrWhiteSpace(user) || string.IsNullOrWhiteSpace(pass))
+            {
+                MessageBox.Show("Please enter both username and password.");
+                return;
+            }
             // Placeholder for admin check logic
             bool isAdmin = false;
 
