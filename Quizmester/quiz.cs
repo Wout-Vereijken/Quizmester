@@ -3,7 +3,7 @@ using System;
 using System.Collections.ObjectModel; // Needed for ObservableCollection
 using System.Windows;
 using System.Linq;
-using Org.BouncyCastle.Bcpg; // Needed for .Select() when joining strings
+using Org.BouncyCastle.Bcpg;
 
 namespace Quizmester
 {
@@ -13,6 +13,7 @@ namespace Quizmester
         public string QuizTitle { get; set; }       // Title of the quiz
         public string QuizDescription { get; set; } // Description of the quiz
         public string QuizId { get; set; } // ID of the quiz
+        public string QuestionText { get; internal set; }
     }
 
     // Class to handle retrieving quizzes from the database

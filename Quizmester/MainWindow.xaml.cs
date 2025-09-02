@@ -231,11 +231,15 @@ namespace Quizmester
 
         #region start quiz
 
-        private void OnStartQuiz(object sender, RoutedEventArgs e)
+        public void OnStartQuiz(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.CommandParameter is string quizId)
             {
                 MessageBox.Show($"Starting quiz with ID: {quizId}");
+
+                // Load the quiz questions into DataContext
+                DataContext = new quizQuestion(quizId);
+
                 ShowScreen(CurrentScreen.QuizScreen);
             }
             else
@@ -243,6 +247,7 @@ namespace Quizmester
                 MessageBox.Show("Not working");
             }
         }
+
 
 
 
