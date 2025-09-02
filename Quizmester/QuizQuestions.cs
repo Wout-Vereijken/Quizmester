@@ -26,6 +26,7 @@ namespace Quizmester
         private bool _loaded = false; // prevents reloading
         private string connectionString = "Server=localhost;Database=quizmester;Uid=root;Pwd=;";
 
+        int AnsweredQuestions = 0;
         public QuizQuestionLoader(string quizId)
         {
             _QuizQuestions = new ObservableCollection<QuizQuestions>();
