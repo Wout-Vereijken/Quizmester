@@ -13,7 +13,7 @@ namespace Quizmester
         public string QuizTitle { get; set; }       // Title of the quiz
         public string QuizDescription { get; set; } // Description of the quiz
         public string QuizId { get; set; } // ID of the quiz
-        public string QuestionText { get; internal set; }
+        //public string QuestionText { get; internal set; }
     }
 
     // Class to handle retrieving quizzes from the database

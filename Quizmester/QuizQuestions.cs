@@ -1,79 +1,93 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace Quizmester
 {
-    // Simple model: just holds one question's text + quiz ID
+    // Holds one question with answers
     public class QuizQuestions
     {
         public string QuestionText { get; set; }
-        public string QuizId { get; set; }
+        public string QuizAnswerOne { get; set; }
+        public string QuizAnswerTwo { get; set; }
+        public string QuizAnswerThree { get; set; }
+        public string QuizAnswerFour { get; set; }
+        public int CorrectAnswer { get; set; }
     }
 
-    // This class actually loads questions from the database
-    public class quizQuestion
+    // This class loads questions only once
+    public class QuizQuestionLoader
     {
-        // Backing field for our collection of questions
-        private readonly ObservableCollection<QuizChoice> _QuizQuestions;
+        private readonly ObservableCollection<QuizQuestions> _QuizQuestions;
+        public ObservableCollection<QuizQuestions> QuizQuestions => _QuizQuestions;
 
-        // Public property so WPF can bind to it
-        public ObservableCollection<QuizChoice> QuizQuestions => _QuizQuestions;
+        private bool _loaded = false; // prevents reloading
+        private string connectionString = "Server=localhost;Database=quizmester;Uid=root;Pwd=;";
 
-        // MySQL connection string – update DB/table/credentials if needed
-        string connectionString = "Server=localhost;Database=quizmester;Uid=root;Pwd=;";
-
-        // Constructor: we pass in quizId and it fetches questions for that quiz
-        public quizQuestion(string quizId)
+        public QuizQuestionLoader(string quizId)
         {
-            // Debug popup: see which quiz ID was passed
-            MessageBox.Show("Loading questions for quiz ID: " + quizId);
+            _QuizQuestions = new ObservableCollection<QuizQuestions>();
 
-            _QuizQuestions = new ObservableCollection<QuizChoice>();
+            if (_loaded) return; // already loaded
 
-            // SQL: IMPORTANT – make sure `questions` is the right table name
-            // and that you have columns `QuestionText` and `QuizId`
-            string sql = "SELECT QuestionText FROM questions WHERE QuizId = @quizId";
+            LoadQuestions(quizId);
+
+            _loaded = true;
+        }
+
+        private void LoadQuestions(string quizId)
+        {
+            string sqlQuestions = "SELECT QuestionText, QuestionId FROM questions WHERE QuizId = @quizId";
+            string sqlAnswers = "SELECT AnswerOne, AnswerTwo, AnswerThree, AnswerFour, CorrectAnswer FROM answers WHERE QuestionId = @QuestionId";
 
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
                 try
                 {
-                    conn.Open(); // Try to connect to DB
+                    conn.Open();
 
-                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                    var questions = new List<(int QuestionId, string QuestionText)>();
+                    using (MySqlCommand cmd = new MySqlCommand(sqlQuestions, conn))
                     {
-                        // Add parameter
                         cmd.Parameters.AddWithValue("@quizId", quizId);
 
-                        // Execute query
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
-                            // Debug: check if query was executed
-                            MessageBox.Show("Executing query to load questions...");
-
-                            // Loop through results
                             while (reader.Read())
                             {
-                                // Get the QuestionText column from the current row
-                                string questionText = reader.GetString("QuestionText");
+                                questions.Add((reader.GetInt32("QuestionId"), reader.GetString("QuestionText")));
+                            }
+                        }
+                    }
 
-                                // Debug: show what we loaded
-                                MessageBox.Show("Loaded question: " + questionText);
+                    foreach (var q in questions)
+                    {
+                        using (MySqlCommand cmd2 = new MySqlCommand(sqlAnswers, conn))
+                        {
+                            cmd2.Parameters.AddWithValue("@QuestionId", q.QuestionId);
 
-                                // Add it to collection → WPF can now display it
-                                _QuizQuestions.Add(new QuizChoice
+                            using (MySqlDataReader answerReader = cmd2.ExecuteReader())
+                            {
+                                if (answerReader.Read())
                                 {
-                                    QuestionText = questionText
-                                });
+                                    _QuizQuestions.Add(new QuizQuestions
+                                    {
+                                        QuestionText = q.QuestionText,
+                                        QuizAnswerOne = answerReader.GetString("AnswerOne"),
+                                        QuizAnswerTwo = answerReader.GetString("AnswerTwo"),
+                                        QuizAnswerThree = answerReader.GetString("AnswerThree"),
+                                        QuizAnswerFour = answerReader.GetString("AnswerFour"),
+                                        CorrectAnswer = answerReader.GetInt32("CorrectAnswer")
+                                    });
+                                }
                             }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    // If anything fails (SQL error, connection, etc.) we see it here
                     MessageBox.Show("Error: " + ex.Message);
                 }
             }

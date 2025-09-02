@@ -238,7 +238,7 @@ namespace Quizmester
                 MessageBox.Show($"Starting quiz with ID: {quizId}");
 
                 // Load the quiz questions into DataContext
-                DataContext = new quizQuestion(quizId);
+                DataContext = new QuizQuestionLoader(quizId);
 
                 ShowScreen(CurrentScreen.QuizScreen);
             }
