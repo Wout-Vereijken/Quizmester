@@ -335,7 +335,8 @@
                             Background="White"
                             CornerRadius="20"
                             Padding="30"
-                            Width="350"
+                            MaxWidth="700"
+                            MinWidth="350"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center">
 
@@ -383,7 +384,9 @@
                                      HorizontalAlignment="Center"
                                      Margin="10,20,10,0"
                                      Click="AnswerOne"
+                                     Tag="1"
                                      CommandParameter="{Binding QuizAnswerOne}"/>
+
                                 <Button
                                      Content="{Binding QuizAnswerTwo}"
                                      Width="120"
@@ -397,6 +400,7 @@
                                      HorizontalAlignment="Center"
                                      Margin="10,20,10,0"
                                      Click="AnswerTwo"
+                                    Tag="2"
                                      CommandParameter="{Binding QuizAnswerTwo}"/>
                                 <Button
                                      Content="{Binding QuizAnswerThree}"
@@ -411,6 +415,7 @@
                                      HorizontalAlignment="Center"
                                      Margin="10,20,10,0"
                                      Click="AnswerThree"
+                                    Tag="3"
                                      CommandParameter="{Binding QuizAnswerThree}"/>
                                 <Button
                                      Content="{Binding QuizAnswerFour}"
@@ -425,6 +430,7 @@
                                      HorizontalAlignment="Center"
                                      Margin="10,20,10,0"
                                      Click="AnswerFour"
+                                    Tag="4"
                                      CommandParameter="{Binding QuizAnswerFour}"/>
                             </StackPanel>
                         </Border>

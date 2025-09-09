@@ -40,8 +40,11 @@ namespace Quizmester
 
         private void LoadQuestions(string quizId)
         {
-            string sqlQuestions = "SELECT QuestionText, QuestionId FROM questions WHERE QuizId = @quizId";
+
+            string sqlQuestions = "SELECT QuestionText, QuestionId FROM questions WHERE QuizId = @quizId ORDER BY QuestionId ASC LIMIT 1";
+
             string sqlAnswers = "SELECT AnswerOne, AnswerTwo, AnswerThree, AnswerFour, CorrectAnswer FROM answers WHERE QuestionId = @QuestionId";
+
 
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
@@ -82,6 +85,7 @@ namespace Quizmester
                                         QuizAnswerFour = answerReader.GetString("AnswerFour"),
                                         CorrectAnswer = answerReader.GetInt32("CorrectAnswer")
                                     });
+                                    AnsweredQuestions++;
                                 }
                             }
                         }
