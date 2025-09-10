@@ -22,41 +22,36 @@ namespace Quizmester
     {
         private readonly ObservableCollection<QuizQuestions> _QuizQuestions;
         public ObservableCollection<QuizQuestions> QuizQuestions => _QuizQuestions;
-
-        private bool _loaded = false; // prevents reloading
+        private bool _loaded = false;
         private string connectionString = "Server=localhost;Database=quizmester;Uid=root;Pwd=;";
+        private string _quizId;
+        private List<QuizQuestions> _allQuestions;
 
-        int AnsweredQuestions = 0;
         public QuizQuestionLoader(string quizId)
         {
             _QuizQuestions = new ObservableCollection<QuizQuestions>();
-
-            if (_loaded) return; // already loaded
-
-            LoadQuestions(quizId);
-
+            _quizId = quizId;
+            if (_loaded) return;
+            LoadQuestions();
             _loaded = true;
         }
 
-        private void LoadQuestions(string quizId)
+        private void LoadQuestions()
         {
-
+            _allQuestions = new List<QuizQuestions>();
             string sqlQuestions = "SELECT QuestionText, QuestionId FROM questions WHERE QuizId = @quizId ORDER BY QuestionId ASC LIMIT 1";
-
-            string sqlAnswers = "SELECT AnswerOne, AnswerTwo, AnswerThree, AnswerFour, CorrectAnswer FROM answers WHERE QuestionId = @QuestionId";
-
+            string sqlAnswers = "SELECT AnswerOne, AnswerTwo, AnswerThree, AnswerFour, CorrectAnswer FROM answers WHERE QuestionId = @QuestionId LIMIT 1";
 
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
                 try
                 {
                     conn.Open();
-
                     var questions = new List<(int QuestionId, string QuestionText)>();
+
                     using (MySqlCommand cmd = new MySqlCommand(sqlQuestions, conn))
                     {
-                        cmd.Parameters.AddWithValue("@quizId", quizId);
-
+                        cmd.Parameters.AddWithValue("@quizId", _quizId);
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
@@ -71,12 +66,11 @@ namespace Quizmester
                         using (MySqlCommand cmd2 = new MySqlCommand(sqlAnswers, conn))
                         {
                             cmd2.Parameters.AddWithValue("@QuestionId", q.QuestionId);
-
                             using (MySqlDataReader answerReader = cmd2.ExecuteReader())
                             {
                                 if (answerReader.Read())
                                 {
-                                    _QuizQuestions.Add(new QuizQuestions
+                                    var quizQuestion = new QuizQuestions
                                     {
                                         QuestionText = q.QuestionText,
                                         QuizAnswerOne = answerReader.GetString("AnswerOne"),
@@ -84,8 +78,9 @@ namespace Quizmester
                                         QuizAnswerThree = answerReader.GetString("AnswerThree"),
                                         QuizAnswerFour = answerReader.GetString("AnswerFour"),
                                         CorrectAnswer = answerReader.GetInt32("CorrectAnswer")
-                                    });
-                                    AnsweredQuestions++;
+                                    };
+
+                                    _QuizQuestions.Add(quizQuestion); // <-- Add to ObservableCollection so UI updates
                                 }
                             }
                         }

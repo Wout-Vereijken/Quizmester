@@ -8,302 +8,620 @@
         Title="Quizmester" Height="1080" Width="1920"
         WindowState="Maximized"
         WindowStartupLocation="CenterScreen"
-        Background="Black" WindowStyle="None">
+        Background="#1A1A2E" WindowStyle="None">
+
+    <Window.Resources>
+        <!-- Button Styles -->
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#FF6B35"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="25,12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="25"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF8C5A"/>
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#E55A2B"/>
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.98" ScaleY="0.98"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#E74C3C"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="20"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#C0392B"/>
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.03" ScaleY="1.03"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Answer Button Styles (Kahoot Colors) -->
+        <Style x:Key="AnswerButtonRed" TargetType="Button">
+            <Setter Property="Background" Value="#E21B3C"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Height" Value="80"/>
+            <Setter Property="MinWidth" Value="300"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="15"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <Grid>
+                                <Polygon Fill="White" 
+                                        Points="20,20 40,30 20,40" 
+                                        HorizontalAlignment="Left" 
+                                        VerticalAlignment="Center"
+                                        Margin="20,0,0,0"/>
+                                <ContentPresenter HorizontalAlignment="Center" 
+                                                VerticalAlignment="Center"
+                                                Margin="40,0,20,0"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF4365"/>
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="AnswerButtonBlue" TargetType="Button">
+            <Setter Property="Background" Value="#1368CE"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Height" Value="80"/>
+            <Setter Property="MinWidth" Value="300"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="15"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <Grid>
+                                <Rectangle Fill="White" 
+                                          Width="20" Height="20"
+                                          HorizontalAlignment="Left" 
+                                          VerticalAlignment="Center"
+                                          Margin="20,0,0,0"/>
+                                <ContentPresenter HorizontalAlignment="Center" 
+                                                VerticalAlignment="Center"
+                                                Margin="40,0,20,0"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#3498DB"/>
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="AnswerButtonYellow" TargetType="Button">
+            <Setter Property="Background" Value="#D89E00"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Height" Value="80"/>
+            <Setter Property="MinWidth" Value="300"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="15"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <Grid>
+                                <Polygon Fill="White" 
+                                        Points="15,15 35,15 25,35" 
+                                        HorizontalAlignment="Left" 
+                                        VerticalAlignment="Center"
+                                        Margin="20,0,0,0"/>
+                                <ContentPresenter HorizontalAlignment="Center" 
+                                                VerticalAlignment="Center"
+                                                Margin="40,0,20,0"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#F1C40F"/>
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="AnswerButtonGreen" TargetType="Button">
+            <Setter Property="Background" Value="#26890C"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Height" Value="80"/>
+            <Setter Property="MinWidth" Value="300"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="15"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <Grid>
+                                <Ellipse Fill="White" 
+                                        Width="20" Height="20"
+                                        HorizontalAlignment="Left" 
+                                        VerticalAlignment="Center"
+                                        Margin="20,0,0,0"/>
+                                <ContentPresenter HorizontalAlignment="Center" 
+                                                VerticalAlignment="Center"
+                                                Margin="40,0,20,0"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#27AE60"/>
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Input Styles -->
+        <Style x:Key="ModernTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="#F8F9FA"/>
+            <Setter Property="BorderBrush" Value="#E9ECEF"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Padding" Value="15,12"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="10">
+                            <ScrollViewer x:Name="PART_ContentHost" 
+                                        Focusable="false"
+                                        HorizontalScrollBarVisibility="Hidden"
+                                        VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF6B35"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ModernPasswordBoxStyle" TargetType="PasswordBox">
+            <Setter Property="Background" Value="#F8F9FA"/>
+            <Setter Property="BorderBrush" Value="#E9ECEF"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Padding" Value="15,12"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="PasswordBox">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="10">
+                            <ScrollViewer x:Name="PART_ContentHost" 
+                                        Focusable="false"
+                                        HorizontalScrollBarVisibility="Hidden"
+                                        VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF6B35"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
 
     <Grid>
         <!-- Welcome Screen -->
         <Grid x:Name="WelcomeScreen" Visibility="Collapsed">
             <Grid.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="#9494EC" Offset="0" />
-                    <GradientStop Color="#3C3C8C" Offset="1" />
-                </LinearGradientBrush>
+                <RadialGradientBrush>
+                    <GradientStop Color="#FF6B35" Offset="0"/>
+                    <GradientStop Color="#1A1A2E" Offset="1"/>
+                </RadialGradientBrush>
             </Grid.Background>
-            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Margin="20">
-                <Border CornerRadius="20"
-                        Width="100"
-                        Height="100"
-                        Background="White">
 
-                    <Button Content="X"
-                            Width="100"
-                            Height="100"
-                            FontSize="72"
-                            FontWeight="SemiBold"
-                            Cursor="Hand"
-                            Foreground="LightGray"
-                            Background="Transparent"
-                            BorderBrush="Transparent"
-                            Click="ExitApplicationButton"
-                            />
+            <!-- Close Button -->
+            <Button Content="✕"
+                    Width="60" Height="60"
+                    FontSize="24" FontWeight="Bold"
+                    Background="#E74C3C" Foreground="White"
+                    BorderThickness="0"
+                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                    Margin="30"
+                    Style="{StaticResource SecondaryButtonStyle}"
+                    Click="ExitApplicationButton"/>
 
-                </Border>
-            </StackPanel>
+            <!-- Welcome Content -->
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock Text="Welcome to Quizmester!"
-                           FontSize="72"
-                           FontWeight="Bold"
-                           Foreground="White"
-                           HorizontalAlignment="Center"/>
+                <!-- Logo/Icon -->
+                <Border Background="White" 
+                        CornerRadius="50"
+                        Width="100" Height="100"
+                        Margin="0,0,0,30">
+                    <TextBlock Text="🎯" 
+                              FontSize="50"
+                              HorizontalAlignment="Center" 
+                              VerticalAlignment="Center"/>
+                </Border>
 
-                <TextBlock Text="Stan has three braincells"
-                           FontSize="36"
-                           Foreground="White"
-                           HorizontalAlignment="Center"/>
+                <TextBlock Text="QUIZMESTER"
+                          FontSize="72" FontWeight="Black"
+                          Foreground="White"
+                          HorizontalAlignment="Center"
+                          Margin="0,0,0,10"/>
 
-                <Button Content="Login"
-                        Width="500"
-                        Height="100"
-                        FontSize="26"
-                        FontWeight="SemiBold"
-                        Foreground="White"
-                        Background="#5A5AFF"
-                        BorderBrush="Transparent"
-                        Cursor="Hand"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Padding="10"
-                        Margin="10" 
-                        Click="LoginButton"/>
+                <TextBlock Text="Test Your Knowledge, Challenge Your Mind!"
+                          FontSize="24" FontWeight="Light"
+                          Foreground="#CCCCCC"
+                          HorizontalAlignment="Center"
+                          Margin="0,0,0,50"/>
 
-                <Button Content="Create Account"
-                        Width="500"
-                        Height="100"
-                        FontSize="26"
-                        FontWeight="SemiBold"
-                        Foreground="White"
-                        Background="#5A5AFF"
-                        BorderBrush="Transparent"
-                        Cursor="Hand"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Padding="10"
-                        Margin="10"
-                        Click="CreateAccountButton"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Content="LOGIN"
+                            Width="200" Height="60"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            Margin="10"
+                            Click="LoginButton"/>
+
+                    <Button Content="CREATE ACCOUNT"
+                            Width="200" Height="60"
+                            Background="#9B59B6" 
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            Margin="10"
+                            Click="CreateAccountButton"/>
+                </StackPanel>
             </StackPanel>
         </Grid>
+
         <!-- Login Screen -->
         <Grid x:Name="LoginScreen" Visibility="Collapsed">
             <Grid.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#9494EC" Offset="0"/>
-                    <GradientStop Color="#3C3C8C" Offset="1"/>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#667eea" Offset="0"/>
+                    <GradientStop Color="#764ba2" Offset="1"/>
                 </LinearGradientBrush>
             </Grid.Background>
 
             <Border Background="White" 
-                    CornerRadius="20" 
-                    Padding="30" 
-                    Width="350" 
+                    CornerRadius="25" 
+                    Padding="50" 
+                    Width="450" 
                     HorizontalAlignment="Center" 
                     VerticalAlignment="Center">
+
                 <StackPanel>
-                    <!-- Title -->
-                    <TextBlock Text="Login"
-                               FontSize="28"
-                               FontWeight="Bold"
-                               Foreground="#3C3C8C"
-                               HorizontalAlignment="Center"/>
+                    <!-- Login Icon -->
+                    <Border Background="#FF6B35" 
+                            CornerRadius="30"
+                            Width="60" Height="60"
+                            HorizontalAlignment="Center"
+                            Margin="0,0,0,20">
+                        <TextBlock Text="👤" 
+                                  FontSize="30"
+                                  HorizontalAlignment="Center" 
+                                  VerticalAlignment="Center"/>
+                    </Border>
+
+                    <TextBlock Text="Welcome Back!"
+                              FontSize="32" FontWeight="Bold"
+                              Foreground="#2C3E50"
+                              HorizontalAlignment="Center"
+                              Margin="0,0,0,30"/>
 
                     <!-- Username -->
-                    <StackPanel>
-                        <TextBlock Text="Username" 
-                                   FontSize="14"
-                                   Foreground="Gray"
-                                   Margin="0,0,0,5"/>
-                        <TextBox x:Name="UsernameBox"
-                                 Height="35"
-                                 FontSize="14"
-                                 Padding="5"
-                                 BorderBrush="#9494EC"
-                                 BorderThickness="1"/>
-                    </StackPanel>
+                    <TextBlock Text="USERNAME" 
+                              FontSize="14" FontWeight="SemiBold"
+                              Foreground="#7F8C8D"
+                              Margin="0,0,0,8"/>
+                    <TextBox x:Name="UsernameBox"
+                            Height="50"
+                            Style="{StaticResource ModernTextBoxStyle}"
+                            Margin="0,0,0,20"/>
 
                     <!-- Password -->
-                    <StackPanel>
-                        <TextBlock Text="Password" 
-                                   FontSize="14"
-                                   Foreground="Gray"
-                                   Margin="0,0,0,5"/>
-                        <PasswordBox x:Name="PasswordBox"
-                                     Height="35"
-                                     FontSize="14"
-                                     Padding="5"
-                                     BorderBrush="#9494EC"
-                                     BorderThickness="1"/>
-                    </StackPanel>
+                    <TextBlock Text="PASSWORD" 
+                              FontSize="14" FontWeight="SemiBold"
+                              Foreground="#7F8C8D"
+                              Margin="0,0,0,8"/>
+                    <PasswordBox x:Name="PasswordBox"
+                                Height="50"
+                                Style="{StaticResource ModernPasswordBoxStyle}"
+                                Margin="0,0,0,30"/>
 
-                    <!-- Login Button -->
-                    <Button Content="Login"
-                            Height="40"
-                            FontSize="16"
-                            FontWeight="SemiBold"
-                            Foreground="White"
-                            Background="#5A5AFF"
-                            BorderBrush="Transparent"
-                            Cursor="Hand"
-                            HorizontalAlignment="Stretch"
-                            Margin="0,10,0,0"
+                    <!-- Buttons -->
+                    <Button Content="LOGIN"
+                            Height="50"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            Margin="0,0,0,15"
                             Click="InsertLoginButton"/>
 
-                    <Button Content="Back "
-                            Height="40"
-                            FontSize="16"
-                            FontWeight="SemiBold"
-                            Foreground="White"
-                            Background="DarkRed"
-                            BorderBrush="Transparent"
-                            Cursor="Hand"
-                            HorizontalAlignment="Stretch"
-                            Margin="0,10,0,0"
+                    <Button Content="BACK"
+                            Height="45"
+                            Style="{StaticResource SecondaryButtonStyle}"
                             Click="BackButton"/>
                 </StackPanel>
             </Border>
         </Grid>
-        <!-- create account Screens -->
+
+        <!-- Create Account Screen -->
         <Grid x:Name="CreateAccountScreen" Visibility="Collapsed">
             <Grid.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#9494EC" Offset="0"/>
-                    <GradientStop Color="#3C3C8C" Offset="1"/>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#a8edea" Offset="0"/>
+                    <GradientStop Color="#fed6e3" Offset="1"/>
                 </LinearGradientBrush>
             </Grid.Background>
 
             <Border Background="White" 
-                    CornerRadius="20" 
-                    Padding="30" 
-                    Width="350" 
+                    CornerRadius="25" 
+                    Padding="50" 
+                    Width="450" 
                     HorizontalAlignment="Center" 
                     VerticalAlignment="Center">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="10" BlurRadius="20" Opacity="0.3"/>
+                </Border.Effect>
+
                 <StackPanel>
-                    <!-- Title -->
-                    <TextBlock Text="Login"
-                       FontSize="28"
-                       FontWeight="Bold"
-                       Foreground="#3C3C8C"
-                       HorizontalAlignment="Center"/>
+                    <!-- Create Account Icon -->
+                    <Border Background="#9B59B6" 
+                            CornerRadius="30"
+                            Width="60" Height="60"
+                            HorizontalAlignment="Center"
+                            Margin="0,0,0,20">
+                        <TextBlock Text="✨" 
+                                  FontSize="30"
+                                  HorizontalAlignment="Center" 
+                                  VerticalAlignment="Center"/>
+                    </Border>
+
+                    <TextBlock Text="Join Quizmester!"
+                              FontSize="32" FontWeight="Bold"
+                              Foreground="#2C3E50"
+                              HorizontalAlignment="Center"
+                              Margin="0,0,0,30"/>
 
                     <!-- Username -->
-                    <StackPanel>
-                        <TextBlock Text="Username" 
-                           FontSize="14"
-                           Foreground="Gray"
-                           Margin="0,0,0,5"/>
-                        <TextBox x:Name="CreateUsernameBox"
-                         Height="35"
-                         FontSize="14"
-                         Padding="5"
-                         BorderBrush="#9494EC"
-                         BorderThickness="1"/>
-                    </StackPanel>
+                    <TextBlock Text="USERNAME" 
+                              FontSize="14" FontWeight="SemiBold"
+                              Foreground="#7F8C8D"
+                              Margin="0,0,0,8"/>
+                    <TextBox x:Name="CreateUsernameBox"
+                            Height="50"
+                            Style="{StaticResource ModernTextBoxStyle}"
+                            Margin="0,0,0,20"/>
 
                     <!-- Password -->
-                    <StackPanel>
-                        <TextBlock Text="Password" 
-                           FontSize="14"
-                           Foreground="Gray"
-                           Margin="0,0,0,5"/>
-                        <PasswordBox x:Name="CreatePasswordBox"
-                             Height="35"
-                             FontSize="14"
-                             Padding="5"
-                             BorderBrush="#9494EC"
-                             BorderThickness="1"/>
-                    </StackPanel>
+                    <TextBlock Text="PASSWORD" 
+                              FontSize="14" FontWeight="SemiBold"
+                              Foreground="#7F8C8D"
+                              Margin="0,0,0,8"/>
+                    <PasswordBox x:Name="CreatePasswordBox"
+                                Height="50"
+                                Style="{StaticResource ModernPasswordBoxStyle}"
+                                Margin="0,0,0,30"/>
 
-                    <!-- Create Button -->
-                    <Button Content="Create"
-                            Height="40"
-                            FontSize="16"
-                            FontWeight="SemiBold"
-                            Foreground="White"
-                            Background="#5A5AFF"
-                            BorderBrush="Transparent"
-                            Cursor="Hand"
-                            HorizontalAlignment="Stretch"
-                            Margin="0,10,0,0"
+                    <!-- Buttons -->
+                    <Button Content="CREATE ACCOUNT"
+                            Height="50"
+                            Background="#9B59B6"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            Margin="0,0,0,15"
                             Click="InsertCreateAccountButton"/>
 
-                    <Button Content="Back "
-                            Height="40"
-                            FontSize="16"
-                            FontWeight="SemiBold"
-                            Foreground="White"
-                            Background="DarkRed"
-                            BorderBrush="Transparent"
-                            Cursor="Hand"
-                            HorizontalAlignment="Stretch"
-                            Margin="0,10,0,0"
+                    <Button Content="BACK"
+                            Height="45"
+                            Style="{StaticResource SecondaryButtonStyle}"
                             Click="BackButton"/>
                 </StackPanel>
             </Border>
         </Grid>
+
         <!-- Quiz Choice Screen -->
         <Grid x:Name="QuizChoiceScreen" Visibility="Collapsed">
-            <!-- Background on the Grid -->
             <Grid.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="Black" Offset="0" />
-                    <GradientStop Color="#00003f" Offset="1" />
+                    <GradientStop Color="#1A1A2E" Offset="0"/>
+                    <GradientStop Color="#16213E" Offset="1"/>
                 </LinearGradientBrush>
             </Grid.Background>
 
-            <!-- Scrollable content -->
-            <ScrollViewer VerticalScrollBarVisibility="Hidden" VerticalAlignment="Top">
+            <ScrollViewer VerticalScrollBarVisibility="Hidden">
                 <StackPanel>
-                    <!-- Hero section -->
-                    <Grid Height="400">
+                    <!-- Header Section -->
+                    <Grid Height="300" Margin="0,0,0,50">
                         <Grid.Background>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                <GradientStop Color="#9494EC" Offset="0" />
-                                <GradientStop Color="#3C3C8C" Offset="1" />
-                            </LinearGradientBrush>
+                            <RadialGradientBrush>
+                                <GradientStop Color="#FF6B35" Offset="0"/>
+                                <GradientStop Color="#FF8C42" Offset="1"/>
+                            </RadialGradientBrush>
                         </Grid.Background>
-                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <TextBlock Text="Choose Your Quiz Adventure"
-                           FontSize="48"
-                           FontWeight="Bold"
-                           Foreground="White"
-                           Margin="0,20,0,20"/>
 
-                            <TextBlock Text="Select a quiz from the options below:"
-                           FontSize="24"
-                           Foreground="White"
-                           Margin="0,0,0,20"/>
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="🎮" 
+                                      FontSize="80"
+                                      HorizontalAlignment="Center"
+                                      Margin="0,0,0,20"/>
+
+                            <TextBlock Text="Choose Your Quiz Adventure"
+                                      FontSize="48" FontWeight="Black"
+                                      Foreground="White"
+                                      HorizontalAlignment="Center"
+                                      Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Select a quiz and start your knowledge journey!"
+                                      FontSize="20" FontWeight="Light"
+                                      Foreground="#EEEEEE"
+                                      HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Grid>
 
-                    <!-- Next block -->
-                    <ItemsControl ItemsSource="{Binding QuizChoices}" HorizontalAlignment="Center">
-                        <!-- Panel that arranges the items -->
+                    <!-- Quiz Cards -->
+                    <ItemsControl ItemsSource="{Binding QuizChoices}" 
+                                 HorizontalAlignment="Center">
                         <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate >
-                                <WrapPanel />
+                            <ItemsPanelTemplate>
+                                <WrapPanel HorizontalAlignment="Center"/>
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
 
-                        <!-- Template for each item -->
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Margin="10" Padding="15" Background="White">
-                                    <StackPanel Width="500">
-                                        <TextBlock Text="{Binding QuizTitle}" FontSize="20" FontWeight="Bold" Foreground="Black"/>
-                                        <TextBlock Text="{Binding QuizDescription}" FontSize="14" Foreground="Gray"/>
-                                        <TextBlock x:Name="QuizId" Text="{Binding QuizId}" FontSize="14" Foreground="Gray"/>
-                                        <Button Content="Start Quiz"
-                                            Width="120"
-                                            Height="40"
-                                            FontSize="16"
-                                            FontWeight="SemiBold"
-                                            Foreground="White"
-                                            Background="#5A5AFF"
-                                            BorderBrush="Transparent"
-                                            Cursor="Hand"
-                                            HorizontalAlignment="Center"
-                                            Margin="10,20,10,0"
-                                            Click="OnStartQuiz"
-                                            CommandParameter="{Binding QuizId}"/>
-                                    </StackPanel>
+                                <Border Background="White" 
+                                        CornerRadius="20" 
+                                        Margin="15" 
+                                        Padding="25"
+                                        Width="350"
+                                        Height="200">
+                                    <Border.Effect>
+                                        <DropShadowEffect ShadowDepth="5" BlurRadius="15" Opacity="0.2"/>
+                                    </Border.Effect>
+
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <StackPanel Grid.Row="0" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding QuizTitle}" 
+                                                      FontSize="24" FontWeight="Bold" 
+                                                      Foreground="#2C3E50"
+                                                      TextAlignment="Center"
+                                                      Margin="0,0,0,10"/>
+
+                                            <TextBlock Text="{Binding QuizDescription}" 
+                                                      FontSize="16" 
+                                                      Foreground="#7F8C8D"
+                                                      TextAlignment="Center"
+                                                      TextWrapping="Wrap"/>
+
+                                            <TextBlock Text="{Binding QuizId}" 
+                                                      FontSize="12" 
+                                                      Foreground="#BDC3C7"
+                                                      TextAlignment="Center"
+                                                      Margin="0,5,0,0"
+                                                      Visibility="Collapsed"/>
+                                        </StackPanel>
+
+                                        <Button Grid.Row="1"
+                                               Content="START QUIZ"
+                                               Style="{StaticResource PrimaryButtonStyle}"
+                                               HorizontalAlignment="Stretch"
+                                               Height="45"
+                                               Margin="0,20,0,0"
+                                               Click="OnStartQuiz"
+                                               CommandParameter="{Binding QuizId}"/>
+                                    </Grid>
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -311,127 +629,113 @@
                 </StackPanel>
             </ScrollViewer>
         </Grid>
-        <!-- Quiz screen -->
+
+        <!-- Quiz Screen -->
         <Grid x:Name="QuizScreen" Visibility="Visible">
             <Grid.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="Black" Offset="0" />
-                    <GradientStop Color="#00003f" Offset="1" />
-                </LinearGradientBrush>
+                <RadialGradientBrush>
+                    <GradientStop Color="#4834d4" Offset="0"/>
+                    <GradientStop Color="#130f40" Offset="1"/>
+                </RadialGradientBrush>
             </Grid.Background>
 
-            <ItemsControl ItemsSource="{Binding QuizQuestions}" HorizontalAlignment="Center">
-                <!-- Panel that arranges the items -->
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate >
-                        <WrapPanel />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-
+            <ItemsControl ItemsSource="{Binding QuizQuestions}" 
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <!-- Template for each item -->
-                        <Border
-                            Background="White"
-                            CornerRadius="20"
-                            Padding="30"
-                            MaxWidth="700"
-                            MinWidth="350"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
+                        <Border Background="White"
+                                CornerRadius="25"
+                                Padding="40"
+                                MaxWidth="900"
+                                MinWidth="700"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                            <Border.Effect>
+                                <DropShadowEffect ShadowDepth="10" BlurRadius="25" Opacity="0.3"/>
+                            </Border.Effect>
 
-                            <!-- Use one container for all content -->
                             <StackPanel>
-                                <TextBlock
-                                    Text="{Binding QuestionText}"
-                                    FontSize="28"
-                                    FontWeight="Bold"
-                                    Foreground="#3C3C8C"
-                                    HorizontalAlignment="Center"
-                                    Margin="0,0,0,20"/>
+                                <!-- Question Header -->
+                                <TextBlock Text="Question 1 of 20"
+                                          FontSize="16" FontWeight="SemiBold"
+                                          Foreground="#7F8C8D"
+                                          HorizontalAlignment="Center"
+                                          Margin="0,0,0,10"/>
 
-                                <ProgressBar Minimum="0" Maximum="30" Value="20" Height="25">
+                                <!-- Progress Bar -->
+                                <ProgressBar Minimum="0" Maximum="30" Value="20" 
+                                           Height="8" 
+                                           Margin="0,0,0,30">
                                     <ProgressBar.Template>
                                         <ControlTemplate TargetType="ProgressBar">
-                                            <Border CornerRadius="12" Background="#E5E5E5">
-                                                <Grid>
-                                                    <Rectangle x:Name="PART_Track" Fill="#E5E5E5" RadiusX="12" RadiusY="12"/>
-                                                    <Rectangle x:Name="PART_Indicator" 
-                                                               Fill="#9494EC" 
-                                                               RadiusX="12" RadiusY="12" 
-                                                               HorizontalAlignment="Left"/>
-                                                </Grid>
+                                            <Border CornerRadius="4" Background="#E9ECEF">
+                                                <Rectangle x:Name="PART_Indicator" 
+                                                          Fill="#FF6B35" 
+                                                          RadiusX="4" RadiusY="4" 
+                                                          HorizontalAlignment="Left"/>
                                             </Border>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsIndeterminate" Value="True">
-                                                    <Setter TargetName="PART_Indicator" Property="Fill" Value="LightGray"/>
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
                                         </ControlTemplate>
                                     </ProgressBar.Template>
                                 </ProgressBar>
 
-                                <Button
-                                     Content="{Binding QuizAnswerOne}"
-                                     Width="120"
-                                     Height="40"
-                                     FontSize="16"
-                                     FontWeight="SemiBold"
-                                     Foreground="White"
-                                     Background="#5A5AFF"
-                                     BorderBrush="Transparent"
-                                     Cursor="Hand"
-                                     HorizontalAlignment="Center"
-                                     Margin="10,20,10,0"
-                                     Click="AnswerOne"
-                                     Tag="1"
-                                     CommandParameter="{Binding QuizAnswerOne}"/>
+                                <!-- Question Text -->
+                                <TextBlock Text="{Binding QuestionText}"
+                                          FontSize="32" FontWeight="Bold"
+                                          Foreground="#2C3E50"
+                                          TextAlignment="Center"
+                                          TextWrapping="Wrap"
+                                          Margin="0,0,0,40"/>
 
-                                <Button
-                                     Content="{Binding QuizAnswerTwo}"
-                                     Width="120"
-                                     Height="40"
-                                     FontSize="16"
-                                     FontWeight="SemiBold"
-                                     Foreground="White"
-                                     Background="#5A5AFF"
-                                     BorderBrush="Transparent"
-                                     Cursor="Hand"
-                                     HorizontalAlignment="Center"
-                                     Margin="10,20,10,0"
-                                     Click="AnswerTwo"
-                                    Tag="2"
-                                     CommandParameter="{Binding QuizAnswerTwo}"/>
-                                <Button
-                                     Content="{Binding QuizAnswerThree}"
-                                     Width="120"
-                                     Height="40"
-                                     FontSize="16"
-                                     FontWeight="SemiBold"
-                                     Foreground="White"
-                                     Background="#5A5AFF"
-                                     BorderBrush="Transparent"
-                                     Cursor="Hand"
-                                     HorizontalAlignment="Center"
-                                     Margin="10,20,10,0"
-                                     Click="AnswerThree"
-                                    Tag="3"
-                                     CommandParameter="{Binding QuizAnswerThree}"/>
-                                <Button
-                                     Content="{Binding QuizAnswerFour}"
-                                     Width="120"
-                                     Height="40"
-                                     FontSize="16"
-                                     FontWeight="SemiBold"
-                                     Foreground="White"
-                                     Background="#5A5AFF"
-                                     BorderBrush="Transparent"
-                                     Cursor="Hand"
-                                     HorizontalAlignment="Center"
-                                     Margin="10,20,10,0"
-                                     Click="AnswerFour"
-                                    Tag="4"
-                                     CommandParameter="{Binding QuizAnswerFour}"/>
+                                <!-- Answer Options -->
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Button Grid.Row="0" Grid.Column="0"
+                                           Content="{Binding QuizAnswerOne}"
+                                           Style="{StaticResource AnswerButtonRed}"
+                                           Click="AnswerOne"
+                                           Tag="1"
+                                           CommandParameter="{Binding QuizAnswerOne}"/>
+
+                                    <Button Grid.Row="0" Grid.Column="1"
+                                           Content="{Binding QuizAnswerTwo}"
+                                           Style="{StaticResource AnswerButtonBlue}"
+                                           Click="AnswerTwo"
+                                           Tag="2"
+                                           CommandParameter="{Binding QuizAnswerTwo}"/>
+
+                                    <Button Grid.Row="1" Grid.Column="0"
+                                           Content="{Binding QuizAnswerThree}"
+                                           Style="{StaticResource AnswerButtonYellow}"
+                                           Click="AnswerThree"
+                                           Tag="3"
+                                           CommandParameter="{Binding QuizAnswerThree}"/>
+
+                                    <Button Grid.Row="1" Grid.Column="1"
+                                           Content="{Binding QuizAnswerFour}"
+                                           Style="{StaticResource AnswerButtonGreen}"
+                                           Click="AnswerFour"
+                                           Tag="4"
+                                           CommandParameter="{Binding QuizAnswerFour}"/>
+                                </Grid>
+
+                                <!-- Timer Display -->
+                                <StackPanel Orientation="Horizontal" 
+                                          HorizontalAlignment="Center"
+                                          Margin="0,30,0,0">
+                                    <TextBlock Text="⏰" FontSize="24" Margin="0,0,10,0"/>
+                                    <TextBlock Text="00:30" 
+                                             FontSize="24" FontWeight="Bold"
+                                             Foreground="#E74C3C"/>
+                                </StackPanel>
                             </StackPanel>
                         </Border>
                     </DataTemplate>
@@ -439,8 +743,45 @@
             </ItemsControl>
         </Grid>
 
-        <Grid x:Name="AdminScreen" Visibility="Collapsed"/>
+        <!-- Admin Screen -->
+        <Grid x:Name="AdminScreen" Visibility="Collapsed">
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#2C3E50" Offset="0"/>
+                    <GradientStop Color="#34495E" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
 
+            <Border Background="White" 
+                    CornerRadius="25" 
+                    Padding="50" 
+                    Width="600" 
+                    Height="400"
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Center">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="10" BlurRadius="20" Opacity="0.3"/>
+                </Border.Effect>
 
+                <StackPanel>
+                    <TextBlock Text="🔧 ADMIN PANEL"
+                              FontSize="36" FontWeight="Bold"
+                              Foreground="#2C3E50"
+                              HorizontalAlignment="Center"
+                              Margin="0,0,0,30"/>
+
+                    <TextBlock Text="Admin features coming soon!"
+                              FontSize="18"
+                              Foreground="#7F8C8D"
+                              HorizontalAlignment="Center"
+                              Margin="0,0,0,40"/>
+
+                    <Button Content="BACK TO MAIN"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            HorizontalAlignment="Center"
+                            Width="200" Height="50"/>
+                </StackPanel>
+            </Border>
+        </Grid>
     </Grid>
 </Window>
