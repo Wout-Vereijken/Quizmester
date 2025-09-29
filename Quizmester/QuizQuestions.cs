@@ -1,15 +1,14 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.ObjectModel;
-using System.Collections.Generic;
 using System.Windows;
 
 namespace Quizmester
 {
-    // Holds one question with answers
     public class QuizQuestions
     {
         public string QuestionText { get; set; }
+        public string QuestionId { get; set; }
         public string QuizAnswerOne { get; set; }
         public string QuizAnswerTwo { get; set; }
         public string QuizAnswerThree { get; set; }
@@ -17,79 +16,93 @@ namespace Quizmester
         public int CorrectAnswer { get; set; }
     }
 
-    // This class loads questions only once
     public class QuizQuestionLoader
     {
         private readonly ObservableCollection<QuizQuestions> _QuizQuestions;
         public ObservableCollection<QuizQuestions> QuizQuestions => _QuizQuestions;
-        private bool _loaded = false;
+
         private string connectionString = "Server=localhost;Database=quizmester;Uid=root;Pwd=;";
         private string _quizId;
-        private List<QuizQuestions> _allQuestions;
+        private int currentQuestionIndex = 0;
 
         public QuizQuestionLoader(string quizId)
         {
             _QuizQuestions = new ObservableCollection<QuizQuestions>();
             _quizId = quizId;
-            if (_loaded) return;
-            LoadQuestions();
-            _loaded = true;
+            LoadNextQuestion();
         }
 
-        private void LoadQuestions()
+        // This constructor is unclear and unused — you may want to remove it or fix usage.
+        public QuizQuestionLoader(int answeredQuestions)
         {
-            _allQuestions = new List<QuizQuestions>();
-            string sqlQuestions = "SELECT QuestionText, QuestionId FROM questions WHERE QuizId = @quizId ORDER BY QuestionId ASC LIMIT 1";
-            string sqlAnswers = "SELECT AnswerOne, AnswerTwo, AnswerThree, AnswerFour, CorrectAnswer FROM answers WHERE QuestionId = @QuestionId LIMIT 1";
+            _QuizQuestions = new ObservableCollection<QuizQuestions>();
+            currentQuestionIndex = answeredQuestions;
+            LoadNextQuestion();
+        }
 
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
+        public void LoadNextQuestion()
+        {
+            var question = GetQuestionFromDatabase(_quizId, currentQuestionIndex);
+            if (question != null)
             {
-                try
+                _QuizQuestions.Add(question);
+                currentQuestionIndex++; // increment for next call
+            }
+            else
+            {
+                MessageBox.Show("No more questions available or an error occurred.");
+            }
+        }
+
+        private QuizQuestions GetQuestionFromDatabase(string quizId, int offset)
+        {
+            string sqlQuestion = @"
+                SELECT q.QuestionText, q.QuestionId, a.AnswerOne, a.AnswerTwo, a.AnswerThree, a.AnswerFour, a.CorrectAnswer
+                FROM questions q
+                INNER JOIN answers a ON q.QuestionId = a.QuestionId
+                WHERE q.QuizId = @quizId
+                ORDER BY q.QuestionId ASC
+                LIMIT 1 OFFSET @offset";
+
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
-                    var questions = new List<(int QuestionId, string QuestionText)>();
 
-                    using (MySqlCommand cmd = new MySqlCommand(sqlQuestions, conn))
+                    using (MySqlCommand cmd = new MySqlCommand(sqlQuestion, conn))
                     {
-                        cmd.Parameters.AddWithValue("@quizId", _quizId);
+                        cmd.Parameters.AddWithValue("@quizId", quizId);
+                        cmd.Parameters.AddWithValue("@offset", offset);
+
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
-                            while (reader.Read())
+                            if (reader.Read())
                             {
-                                questions.Add((reader.GetInt32("QuestionId"), reader.GetString("QuestionText")));
-                            }
-                        }
-                    }
-
-                    foreach (var q in questions)
-                    {
-                        using (MySqlCommand cmd2 = new MySqlCommand(sqlAnswers, conn))
-                        {
-                            cmd2.Parameters.AddWithValue("@QuestionId", q.QuestionId);
-                            using (MySqlDataReader answerReader = cmd2.ExecuteReader())
-                            {
-                                if (answerReader.Read())
+                                return new QuizQuestions
                                 {
-                                    var quizQuestion = new QuizQuestions
-                                    {
-                                        QuestionText = q.QuestionText,
-                                        QuizAnswerOne = answerReader.GetString("AnswerOne"),
-                                        QuizAnswerTwo = answerReader.GetString("AnswerTwo"),
-                                        QuizAnswerThree = answerReader.GetString("AnswerThree"),
-                                        QuizAnswerFour = answerReader.GetString("AnswerFour"),
-                                        CorrectAnswer = answerReader.GetInt32("CorrectAnswer")
-                                    };
-
-                                    _QuizQuestions.Add(quizQuestion); // <-- Add to ObservableCollection so UI updates
-                                }
+                                    QuestionId = reader.GetInt32("QuestionId").ToString(),
+                                    QuestionText = reader.GetString("QuestionText"),
+                                    QuizAnswerOne = reader.GetString("AnswerOne"),
+                                    QuizAnswerTwo = reader.GetString("AnswerTwo"),
+                                    QuizAnswerThree = reader.GetString("AnswerThree"),
+                                    QuizAnswerFour = reader.GetString("AnswerFour"),
+                                    CorrectAnswer = reader.GetInt32("CorrectAnswer")
+                                };
+                            }
+                            else
+                            {
+                                // No rows found for this offset - no more questions
+                                return null;
                             }
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error: " + ex.Message);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading question: " + ex.Message);
+                return null;
             }
         }
     }

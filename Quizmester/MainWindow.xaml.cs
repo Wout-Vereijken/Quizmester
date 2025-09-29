@@ -248,33 +248,28 @@ namespace Quizmester
             }
         }
 
-
-
-
         #endregion
+        // answer quiz questions
         int AnsweredQuestions = 0;
         private void AnswerOne(object sender, RoutedEventArgs e)
         {
             AnsweredQuestions = 1;
-            MessageBox.Show("You answered: " + AnsweredQuestions);
+            DataContext = new QuizQuestionLoader(AnsweredQuestions);
         }
         private void AnswerTwo(object sender, RoutedEventArgs e)
         {
             AnsweredQuestions = 2;
-            MessageBox.Show("You answered: " + AnsweredQuestions);
-
+            DataContext = new QuizQuestionLoader(AnsweredQuestions);
         }
         private void AnswerThree(object sender, RoutedEventArgs e)
         {
             AnsweredQuestions = 3;
-            MessageBox.Show("You answered: " + AnsweredQuestions);
-
+            DataContext = new QuizQuestionLoader(AnsweredQuestions);
         }
         private void AnswerFour(object sender, RoutedEventArgs e)
         {
             AnsweredQuestions = 4;
-            MessageBox.Show("You answered: " + AnsweredQuestions);
-
+            DataContext = new QuizQuestionLoader(AnsweredQuestions);
         }
     }
 }

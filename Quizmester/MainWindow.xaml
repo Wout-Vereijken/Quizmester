@@ -703,28 +703,28 @@
                                            Style="{StaticResource AnswerButtonRed}"
                                            Click="AnswerOne"
                                            Tag="1"
-                                           CommandParameter="{Binding QuizAnswerOne}"/>
+                                           Command="{Binding AnswerOne}"/>
 
                                     <Button Grid.Row="0" Grid.Column="1"
                                            Content="{Binding QuizAnswerTwo}"
                                            Style="{StaticResource AnswerButtonBlue}"
                                            Click="AnswerTwo"
                                            Tag="2"
-                                           CommandParameter="{Binding QuizAnswerTwo}"/>
+                                           Command="{Binding AnswerTwo}"/>
 
                                     <Button Grid.Row="1" Grid.Column="0"
                                            Content="{Binding QuizAnswerThree}"
                                            Style="{StaticResource AnswerButtonYellow}"
                                            Click="AnswerThree"
                                            Tag="3"
-                                           CommandParameter="{Binding QuizAnswerThree}"/>
+                                           Command="{Binding AnswerThree}"/>
 
                                     <Button Grid.Row="1" Grid.Column="1"
                                            Content="{Binding QuizAnswerFour}"
                                            Style="{StaticResource AnswerButtonGreen}"
                                            Click="AnswerFour"
                                            Tag="4"
-                                           CommandParameter="{Binding QuizAnswerFour}"/>
+                                           Command="{Binding AnswerFour}"/>
                                 </Grid>
 
                                 <!-- Timer Display -->
