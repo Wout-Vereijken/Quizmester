@@ -18,6 +18,7 @@ namespace Quizmester
 
         // Database connection string
         string connectionString = "Server=localhost;Database=quizmester;Uid=root;Pwd=;";
+        private QuizQuestionLoader currentQuizLoader;
 
         public MainWindow()
         {
@@ -237,8 +238,11 @@ namespace Quizmester
             {
                 MessageBox.Show($"Starting quiz with ID: {quizId}");
 
-                // Load the quiz questions into DataContext
-                DataContext = new QuizQuestionLoader(quizId);
+                // Create one instance of the loader
+                currentQuizLoader = new QuizQuestionLoader(quizId);
+
+                // Bind it to DataContext
+                DataContext = currentQuizLoader;
 
                 ShowScreen(CurrentScreen.QuizScreen);
             }
@@ -248,28 +252,34 @@ namespace Quizmester
             }
         }
 
+
+
         #endregion
         // answer quiz questions
         int AnsweredQuestions = 0;
         private void AnswerOne(object sender, RoutedEventArgs e)
         {
             AnsweredQuestions = 1;
-            DataContext = new QuizQuestionLoader(AnsweredQuestions);
+            currentQuizLoader.LoadNextQuestion();
         }
+
         private void AnswerTwo(object sender, RoutedEventArgs e)
         {
             AnsweredQuestions = 2;
-            DataContext = new QuizQuestionLoader(AnsweredQuestions);
+            currentQuizLoader.LoadNextQuestion();
         }
+
         private void AnswerThree(object sender, RoutedEventArgs e)
         {
             AnsweredQuestions = 3;
-            DataContext = new QuizQuestionLoader(AnsweredQuestions);
+            currentQuizLoader.LoadNextQuestion();
         }
+
         private void AnswerFour(object sender, RoutedEventArgs e)
         {
             AnsweredQuestions = 4;
-            DataContext = new QuizQuestionLoader(AnsweredQuestions);
+            currentQuizLoader.LoadNextQuestion();
         }
+
     }
 }

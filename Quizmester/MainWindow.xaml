@@ -639,7 +639,7 @@
                 </RadialGradientBrush>
             </Grid.Background>
 
-            <ItemsControl ItemsSource="{Binding QuizQuestions}" 
+            <ItemsControl ItemsSource="{Binding Quiz}" 
                          HorizontalAlignment="Center"
                          VerticalAlignment="Center">
                 <ItemsControl.ItemTemplate>

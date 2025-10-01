@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.ObjectModel;
+using System.Reflection.PortableExecutable;
 using System.Windows;
 
 namespace Quizmester
@@ -18,92 +19,145 @@ namespace Quizmester
 
     public class QuizQuestionLoader
     {
-        private readonly ObservableCollection<QuizQuestions> _QuizQuestions;
-        public ObservableCollection<QuizQuestions> QuizQuestions => _QuizQuestions;
+        private readonly ObservableCollection<QuizQuestions> _Quiz;
+        public ObservableCollection<QuizQuestions> Quiz => _Quiz;
+
 
         private string connectionString = "Server=localhost;Database=quizmester;Uid=root;Pwd=;";
+        private int answeredQuestion = 0;
         private string _quizId;
-        private int currentQuestionIndex = 0;
+        string questionText;
+        int questionId;
+        string answerOne;
+        string answerTwo;
+        string answerThree;
+        string answerFour;
+        int CorrectAnswer;
+        int currentQuestionIndex;
 
         public QuizQuestionLoader(string quizId)
         {
-            _QuizQuestions = new ObservableCollection<QuizQuestions>();
+            _Quiz = new ObservableCollection<QuizQuestions>();
             _quizId = quizId;
-            LoadNextQuestion();
+            GetQuestionId();
         }
 
-        // This constructor is unclear and unused — you may want to remove it or fix usage.
         public QuizQuestionLoader(int answeredQuestions)
         {
-            _QuizQuestions = new ObservableCollection<QuizQuestions>();
-            currentQuestionIndex = answeredQuestions;
+            answeredQuestion = answeredQuestions;
             LoadNextQuestion();
         }
 
         public void LoadNextQuestion()
         {
-            var question = GetQuestionFromDatabase(_quizId, currentQuestionIndex);
-            if (question != null)
+            currentQuestionIndex++;
+            questionId++;
+            GetQuestion();
+        }
+
+
+        // Get the question ID from the database where the quizid is equal to the quizid passed in the constructor
+        public void GetQuestionId()
+        {
+            string sql = $"SELECT QuestionText, QuestionId FROM Questions WHERE QuizId = {_quizId} LIMIT 1 ";
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                _QuizQuestions.Add(question);
-                currentQuestionIndex++; // increment for next call
-            }
-            else
-            {
-                MessageBox.Show("No more questions available or an error occurred.");
+                try
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            questionId = reader.GetInt32("QuestionId");
+                            MessageBox.Show($"Question ID: {questionId}");
+                        }
+                    }
+                    GetQuestion();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}");
+                }
             }
         }
 
-        private QuizQuestions GetQuestionFromDatabase(string quizId, int offset)
+        // Get the question text from the database where the quizid is equal to the quizid passed in the constructor and the questionid is equal to the questionid retrieved from GetQuestionId
+        public void GetQuestion()
         {
-            string sqlQuestion = @"
-                SELECT q.QuestionText, q.QuestionId, a.AnswerOne, a.AnswerTwo, a.AnswerThree, a.AnswerFour, a.CorrectAnswer
-                FROM questions q
-                INNER JOIN answers a ON q.QuestionId = a.QuestionId
-                WHERE q.QuizId = @quizId
-                ORDER BY q.QuestionId ASC
-                LIMIT 1 OFFSET @offset";
+            MessageBox.Show(questionId.ToString());
+            string sql = $"SELECT QuestionText FROM Questions WHERE QuizId = {_quizId} AND QuestionId = {questionId} LIMIT 1";
 
-            try
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                try
                 {
                     conn.Open();
-
-                    using (MySqlCommand cmd = new MySqlCommand(sqlQuestion, conn))
+                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
-                        cmd.Parameters.AddWithValue("@quizId", quizId);
-                        cmd.Parameters.AddWithValue("@offset", offset);
-
-                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        if (reader.Read())
                         {
-                            if (reader.Read())
-                            {
-                                return new QuizQuestions
-                                {
-                                    QuestionId = reader.GetInt32("QuestionId").ToString(),
-                                    QuestionText = reader.GetString("QuestionText"),
-                                    QuizAnswerOne = reader.GetString("AnswerOne"),
-                                    QuizAnswerTwo = reader.GetString("AnswerTwo"),
-                                    QuizAnswerThree = reader.GetString("AnswerThree"),
-                                    QuizAnswerFour = reader.GetString("AnswerFour"),
-                                    CorrectAnswer = reader.GetInt32("CorrectAnswer")
-                                };
-                            }
-                            else
-                            {
-                                // No rows found for this offset - no more questions
-                                return null;
-                            }
+                            questionText = reader.GetString("QuestionText");
                         }
                     }
+                    GetAnswers();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}");
                 }
             }
-            catch (Exception ex)
+        }
+
+        public void GetAnswers()
+        {
+            string sql = $"SELECT AnswerOne, AnswerTwo, AnswerThree, AnswerFour, CorrectAnswer FROM Answers WHERE QuizId = {_quizId} AND QuestionId = {questionId} LIMIT 1";
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                MessageBox.Show("Error loading question: " + ex.Message);
-                return null;
+                try
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            answerOne = reader.GetString("AnswerOne");
+                            answerTwo = reader.GetString("AnswerTwo");
+                            answerThree = reader.GetString("AnswerThree");
+                            answerFour = reader.GetString("AnswerFour");
+                            CorrectAnswer = reader.GetInt32("CorrectAnswer");
+                        }
+                    }
+                    ShowQuestion();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}");
+                }
             }
+        }
+
+        public QuizQuestions ShowQuestion()
+        {
+            var question = new QuizQuestions
+            {
+                QuestionText = questionText,
+                QuestionId = questionId.ToString(),
+                QuizAnswerOne = answerOne,
+                QuizAnswerTwo = answerTwo,
+                QuizAnswerThree = answerThree,
+                QuizAnswerFour = answerFour,
+                CorrectAnswer = CorrectAnswer
+            };
+
+            _Quiz.Clear();
+            _Quiz.Add(question);      // add the new question
+            return question;
         }
     }
 }
