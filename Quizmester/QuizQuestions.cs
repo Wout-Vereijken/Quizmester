@@ -1,8 +1,9 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.ObjectModel;
-using System.Reflection.PortableExecutable;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace Quizmester
 {
@@ -22,7 +23,6 @@ namespace Quizmester
         private readonly ObservableCollection<QuizQuestions> _Quiz;
         public ObservableCollection<QuizQuestions> Quiz => _Quiz;
 
-
         private string connectionString = "Server=localhost;Database=quizmester;Uid=root;Pwd=;";
         private int answeredQuestion = 0;
         private string _quizId;
@@ -35,31 +35,80 @@ namespace Quizmester
         int CorrectAnswer;
         int currentQuestionIndex;
 
+        // Timer fields
+        private DispatcherTimer _timer;
+        private int _timeLeft;
+
+        // TextBlock reference
+        private TextBlock _timerTextBlock;
+
         public QuizQuestionLoader(string quizId)
         {
             _Quiz = new ObservableCollection<QuizQuestions>();
             _quizId = quizId;
+            InitTimer();
             GetQuestionId();
         }
 
-        public QuizQuestionLoader(int answeredQuestions)
+        private void InitTimer()
         {
-            answeredQuestion = answeredQuestions;
-            LoadNextQuestion();
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromSeconds(1);
+            _timer.Tick += Timer_Tick;
         }
 
-        public void LoadNextQuestion()
+        private void StartTimer(int seconds)
         {
+            _timeLeft = seconds;
+            _timer.Start();
+            MessageBox.Show($"You have {_timeLeft} seconds to answer this question!");
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            _timeLeft--;
+
+            Console.WriteLine($"Time left: {_timeLeft}");
+
+            changeTimerText();
+
+            if (_timeLeft <= 0)
+            {
+                _timer.Stop();
+                MessageBox.Show("Time is up!");
+                LoadNextQuestion(0); // 0 means no answer given
+            }
+        }
+
+        public void changeTimerText()
+        {
+
+        }
+
+        public void LoadNextQuestion(int AnsweredQuestions)
+        {
+            _timer.Stop(); // stop timer when user answers
+
+            answeredQuestion = AnsweredQuestions;
             currentQuestionIndex++;
             questionId++;
+
+            if (answeredQuestion == CorrectAnswer)
+            {
+                MessageBox.Show("Correct!");
+            }
+            else if (answeredQuestion != -1)
+            {
+                MessageBox.Show("Incorrect!");
+            }
+
             GetQuestion();
         }
 
-
-        // Get the question ID from the database where the quizid is equal to the quizid passed in the constructor
+        // Get the first questionId for this quiz
         public void GetQuestionId()
         {
-            string sql = $"SELECT QuestionText, QuestionId FROM Questions WHERE QuizId = {_quizId} LIMIT 1 ";
+            string sql = $"SELECT QuestionText, QuestionId FROM Questions WHERE QuizId = {_quizId} LIMIT 1";
 
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
@@ -84,10 +133,9 @@ namespace Quizmester
             }
         }
 
-        // Get the question text from the database where the quizid is equal to the quizid passed in the constructor and the questionid is equal to the questionid retrieved from GetQuestionId
+        // Get question text
         public void GetQuestion()
         {
-            MessageBox.Show(questionId.ToString());
             string sql = $"SELECT QuestionText FROM Questions WHERE QuizId = {_quizId} AND QuestionId = {questionId} LIMIT 1";
 
             using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -112,9 +160,11 @@ namespace Quizmester
             }
         }
 
+        // Get answers
         public void GetAnswers()
         {
-            string sql = $"SELECT AnswerOne, AnswerTwo, AnswerThree, AnswerFour, CorrectAnswer FROM Answers WHERE QuizId = {_quizId} AND QuestionId = {questionId} LIMIT 1";
+            string sql = $"SELECT AnswerOne, AnswerTwo, AnswerThree, AnswerFour, CorrectAnswer " +
+                         $"FROM Answers WHERE QuizId = {_quizId} AND QuestionId = {questionId} LIMIT 1";
 
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
@@ -156,7 +206,9 @@ namespace Quizmester
             };
 
             _Quiz.Clear();
-            _Quiz.Add(question);      // add the new question
+            _Quiz.Add(question);
+
+            StartTimer(30); // give 30 seconds per question
             return question;
         }
     }

@@ -732,9 +732,7 @@
                                           HorizontalAlignment="Center"
                                           Margin="0,30,0,0">
                                     <TextBlock Text="⏰" FontSize="24" Margin="0,0,10,0"/>
-                                    <TextBlock Text="00:30" 
-                                             FontSize="24" FontWeight="Bold"
-                                             Foreground="#E74C3C"/>
+                                    <TextBlock x:Name="MyTextBlock" Text="Hello, World!" FontSize="20" Margin="10"/>
                                 </StackPanel>
                             </StackPanel>
                         </Border>

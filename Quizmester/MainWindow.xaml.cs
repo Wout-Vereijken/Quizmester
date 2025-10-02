@@ -20,6 +20,8 @@ namespace Quizmester
         string connectionString = "Server=localhost;Database=quizmester;Uid=root;Pwd=;";
         private QuizQuestionLoader currentQuizLoader;
 
+        private QuizQuestions _changer;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -241,6 +243,7 @@ namespace Quizmester
                 // Create one instance of the loader
                 currentQuizLoader = new QuizQuestionLoader(quizId);
 
+
                 // Bind it to DataContext
                 DataContext = currentQuizLoader;
 
@@ -260,25 +263,25 @@ namespace Quizmester
         private void AnswerOne(object sender, RoutedEventArgs e)
         {
             AnsweredQuestions = 1;
-            currentQuizLoader.LoadNextQuestion();
+            currentQuizLoader.LoadNextQuestion(AnsweredQuestions);
         }
 
         private void AnswerTwo(object sender, RoutedEventArgs e)
         {
             AnsweredQuestions = 2;
-            currentQuizLoader.LoadNextQuestion();
+            currentQuizLoader.LoadNextQuestion(AnsweredQuestions);
         }
 
         private void AnswerThree(object sender, RoutedEventArgs e)
         {
             AnsweredQuestions = 3;
-            currentQuizLoader.LoadNextQuestion();
+            currentQuizLoader.LoadNextQuestion(AnsweredQuestions);
         }
 
         private void AnswerFour(object sender, RoutedEventArgs e)
         {
             AnsweredQuestions = 4;
-            currentQuizLoader.LoadNextQuestion();
+            currentQuizLoader.LoadNextQuestion(AnsweredQuestions);
         }
 
     }
