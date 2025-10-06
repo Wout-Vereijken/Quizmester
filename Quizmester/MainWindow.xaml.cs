@@ -284,5 +284,10 @@ namespace Quizmester
             currentQuizLoader.LoadNextQuestion(AnsweredQuestions);
         }
 
+        public void changeClockText(int time)
+        {
+            //MyTextBlock.Text = $"Time left:{time}";
+        }
+
     }
 }

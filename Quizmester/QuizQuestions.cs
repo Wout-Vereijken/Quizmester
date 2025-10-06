@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel; // For INotifyPropertyChanged
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -18,8 +19,15 @@ namespace Quizmester
         public int CorrectAnswer { get; set; }
     }
 
-    public class QuizQuestionLoader
+    public class TimerThings
     {
+        public int TimerText { get; set; }
+    }
+
+    public class QuizQuestionLoader : INotifyPropertyChanged // NEW: Implement INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged; // NEW: Required for notifications
+
         private readonly ObservableCollection<QuizQuestions> _Quiz;
         public ObservableCollection<QuizQuestions> Quiz => _Quiz;
 
@@ -39,8 +47,25 @@ namespace Quizmester
         private DispatcherTimer _timer;
         private int _timeLeft;
 
-        // TextBlock reference
+        // NEW: Public property to expose the timer value for binding. This will notify the UI when changed.
+        public int TimerText
+        {
+            get => _timeLeft;
+            set
+            {
+                _timeLeft = value;
+                OnPropertyChanged(nameof(TimerText)); // Notify UI to update binding
+            }
+        }
+
+        // TextBlock reference (unused now with binding)
         private TextBlock _timerTextBlock;
+        private MainWindow _mainWindow;
+
+        public QuizQuestionLoader(MainWindow mainWindow)
+        {
+            _mainWindow = mainWindow;
+        }
 
         public QuizQuestionLoader(string quizId)
         {
@@ -60,6 +85,7 @@ namespace Quizmester
         private void StartTimer(int seconds)
         {
             _timeLeft = seconds;
+            TimerText = _timeLeft; // Update the bound property (notifies UI)
             _timer.Start();
             MessageBox.Show($"You have {_timeLeft} seconds to answer this question!");
         }
@@ -67,10 +93,8 @@ namespace Quizmester
         private void Timer_Tick(object sender, EventArgs e)
         {
             _timeLeft--;
-
+            TimerText = _timeLeft; // Use the property to notify UI (replaces ChangetimerText call)
             Console.WriteLine($"Time left: {_timeLeft}");
-
-            changeTimerText();
 
             if (_timeLeft <= 0)
             {
@@ -80,9 +104,10 @@ namespace Quizmester
             }
         }
 
-        public void changeTimerText()
+        // Helper to raise PropertyChanged events
+        protected virtual void OnPropertyChanged(string propertyName)
         {
-
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public void LoadNextQuestion(int AnsweredQuestions)

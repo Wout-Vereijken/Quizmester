@@ -631,6 +631,7 @@
         </Grid>
 
         <!-- Quiz Screen -->
+        <!-- Quiz Screen -->
         <Grid x:Name="QuizScreen" Visibility="Visible">
             <Grid.Background>
                 <RadialGradientBrush>
@@ -640,17 +641,17 @@
             </Grid.Background>
 
             <ItemsControl ItemsSource="{Binding Quiz}" 
-                         HorizontalAlignment="Center"
-                         VerticalAlignment="Center">
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border Background="White"
-                                CornerRadius="25"
-                                Padding="40"
-                                MaxWidth="900"
-                                MinWidth="700"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center">
+                        CornerRadius="25"
+                        Padding="40"
+                        MaxWidth="900"
+                        MinWidth="700"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
                             <Border.Effect>
                                 <DropShadowEffect ShadowDepth="10" BlurRadius="25" Opacity="0.3"/>
                             </Border.Effect>
@@ -658,22 +659,22 @@
                             <StackPanel>
                                 <!-- Question Header -->
                                 <TextBlock Text="Question 1 of 20"
-                                          FontSize="16" FontWeight="SemiBold"
-                                          Foreground="#7F8C8D"
-                                          HorizontalAlignment="Center"
-                                          Margin="0,0,0,10"/>
+                                  FontSize="16" FontWeight="SemiBold"
+                                  Foreground="#7F8C8D"
+                                  HorizontalAlignment="Center"
+                                  Margin="0,0,0,10"/>
 
                                 <!-- Progress Bar -->
                                 <ProgressBar Minimum="0" Maximum="30" Value="20" 
-                                           Height="8" 
-                                           Margin="0,0,0,30">
+                                   Height="8" 
+                                   Margin="0,0,0,30">
                                     <ProgressBar.Template>
                                         <ControlTemplate TargetType="ProgressBar">
                                             <Border CornerRadius="4" Background="#E9ECEF">
                                                 <Rectangle x:Name="PART_Indicator" 
-                                                          Fill="#FF6B35" 
-                                                          RadiusX="4" RadiusY="4" 
-                                                          HorizontalAlignment="Left"/>
+                                                  Fill="#FF6B35" 
+                                                  RadiusX="4" RadiusY="4" 
+                                                  HorizontalAlignment="Left"/>
                                             </Border>
                                         </ControlTemplate>
                                     </ProgressBar.Template>
@@ -681,11 +682,11 @@
 
                                 <!-- Question Text -->
                                 <TextBlock Text="{Binding QuestionText}"
-                                          FontSize="32" FontWeight="Bold"
-                                          Foreground="#2C3E50"
-                                          TextAlignment="Center"
-                                          TextWrapping="Wrap"
-                                          Margin="0,0,0,40"/>
+                                  FontSize="32" FontWeight="Bold"
+                                  Foreground="#2C3E50"
+                                  TextAlignment="Center"
+                                  TextWrapping="Wrap"
+                                  Margin="0,0,0,40"/>
 
                                 <!-- Answer Options -->
                                 <Grid>
@@ -699,40 +700,41 @@
                                     </Grid.ColumnDefinitions>
 
                                     <Button Grid.Row="0" Grid.Column="0"
-                                           Content="{Binding QuizAnswerOne}"
-                                           Style="{StaticResource AnswerButtonRed}"
-                                           Click="AnswerOne"
-                                           Tag="1"
-                                           Command="{Binding AnswerOne}"/>
+                                   Content="{Binding QuizAnswerOne}"
+                                   Style="{StaticResource AnswerButtonRed}"
+                                   Click="AnswerOne"
+                                   Tag="1"/>
 
                                     <Button Grid.Row="0" Grid.Column="1"
-                                           Content="{Binding QuizAnswerTwo}"
-                                           Style="{StaticResource AnswerButtonBlue}"
-                                           Click="AnswerTwo"
-                                           Tag="2"
-                                           Command="{Binding AnswerTwo}"/>
+                                   Content="{Binding QuizAnswerTwo}"
+                                   Style="{StaticResource AnswerButtonBlue}"
+                                   Click="AnswerTwo"
+                                   Tag="2"/>
 
                                     <Button Grid.Row="1" Grid.Column="0"
-                                           Content="{Binding QuizAnswerThree}"
-                                           Style="{StaticResource AnswerButtonYellow}"
-                                           Click="AnswerThree"
-                                           Tag="3"
-                                           Command="{Binding AnswerThree}"/>
+                                   Content="{Binding QuizAnswerThree}"
+                                   Style="{StaticResource AnswerButtonYellow}"
+                                   Click="AnswerThree"
+                                   Tag="3"/>
 
                                     <Button Grid.Row="1" Grid.Column="1"
-                                           Content="{Binding QuizAnswerFour}"
-                                           Style="{StaticResource AnswerButtonGreen}"
-                                           Click="AnswerFour"
-                                           Tag="4"
-                                           Command="{Binding AnswerFour}"/>
+                                   Content="{Binding QuizAnswerFour}"
+                                   Style="{StaticResource AnswerButtonGreen}"
+                                   Click="AnswerFour"
+                                   Tag="4"/>
                                 </Grid>
 
-                                <!-- Timer Display -->
+                                <!-- Timer Display (UPDATED: Moved outside Grid for simplicity, fixed binding) -->
                                 <StackPanel Orientation="Horizontal" 
-                                          HorizontalAlignment="Center"
-                                          Margin="0,30,0,0">
+                                  HorizontalAlignment="Center"
+                                  Margin="0,30,0,0">
                                     <TextBlock Text="⏰" FontSize="24" Margin="0,0,10,0"/>
-                                    <TextBlock x:Name="MyTextBlock" Text="Hello, World!" FontSize="20" Margin="10"/>
+                                    <!-- UPDATED: Bind to parent's TimerText using RelativeSource. Remove x:Name since we're using binding. -->
+                                    <TextBlock Text="{Binding DataContext.TimerText, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                     FontSize="20" 
+                                     Margin="10"
+                                     Foreground="Red"
+                                     FontWeight="Bold"/>
                                 </StackPanel>
                             </StackPanel>
                         </Border>
@@ -740,6 +742,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </Grid>
+
 
         <!-- Admin Screen -->
         <Grid x:Name="AdminScreen" Visibility="Collapsed">
