@@ -1,7 +1,10 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using Google.Protobuf.Reflection;
+﻿using Google.Protobuf.Reflection;
 using MySql.Data.MySqlClient;
+using System.Net.NetworkInformation;
+using System.Numerics;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 namespace Quizmester
 {
     public partial class MainWindow : Window
@@ -15,6 +18,8 @@ namespace Quizmester
             QuizChoiceScreen,
             QuizScreen
         }
+
+        private MediaPlayer player = new MediaPlayer();
 
         // Database connection string
         string connectionString = "Server=localhost;Database=quizmester;Uid=root;Pwd=;";
@@ -31,6 +36,12 @@ namespace Quizmester
             TestConnection();
             // Set DataContext for data binding
             DataContext = new Quiz();
+
+            string musicPath = @"C:\Users\woutv\source\repos\Quizmester\Quizmester\music\MapleStory (2006 GMS) 2-Hour Music Compilation.mp3";
+
+            player.Open(new Uri(musicPath, UriKind.Absolute));
+            player.MediaEnded += (s, e) => player.Position = TimeSpan.Zero; // optional: loop
+            player.Play();
         }
         //testing database connection
         #region Debugging
@@ -238,7 +249,6 @@ namespace Quizmester
         {
             if (sender is Button button && button.CommandParameter is string quizId)
             {
-                MessageBox.Show($"Starting quiz with ID: {quizId}");
 
                 // Create one instance of the loader
                 currentQuizLoader = new QuizQuestionLoader(quizId);

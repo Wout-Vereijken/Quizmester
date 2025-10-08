@@ -87,7 +87,6 @@ namespace Quizmester
             _timeLeft = seconds;
             TimerText = _timeLeft; // Update the bound property (notifies UI)
             _timer.Start();
-            MessageBox.Show($"You have {_timeLeft} seconds to answer this question!");
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -146,7 +145,6 @@ namespace Quizmester
                         if (reader.Read())
                         {
                             questionId = reader.GetInt32("QuestionId");
-                            MessageBox.Show($"Question ID: {questionId}");
                         }
                     }
                     GetQuestion();
