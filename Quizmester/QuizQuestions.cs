@@ -19,6 +19,7 @@ namespace Quizmester
         public string QuizAnswerThree { get; set; }
         public string QuizAnswerFour { get; set; }
         public int CorrectAnswer { get; set; }
+        public string CurrentQuestion { get; set; }
     }
 
     public class TimerThings
@@ -43,7 +44,7 @@ namespace Quizmester
         string answerThree;
         string answerFour;
         int CorrectAnswer;
-        int currentQuestionIndex;
+        int currentQuestionIndex = 1;
         int Score;
 
         // Timer fields
@@ -122,11 +123,13 @@ namespace Quizmester
             var mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
             if (answeredQuestion == CorrectAnswer)
             {
-                mainWindow.ShowOverlay(Colors.Green, 1);
                 Score++;
+                MessageBox.Show($"question: {currentQuestionIndex} \n Score: {Score}");
+                mainWindow.ShowOverlay(Colors.Green, 1);
             }
             else if (answeredQuestion != -1)
             {
+                MessageBox.Show($"question: {currentQuestionIndex} \n Score: {Score}");
                 mainWindow.ShowOverlay(Colors.Red, 1);
             }
 
@@ -230,7 +233,9 @@ namespace Quizmester
                 QuizAnswerTwo = answerTwo,
                 QuizAnswerThree = answerThree,
                 QuizAnswerFour = answerFour,
-                CorrectAnswer = CorrectAnswer
+                CorrectAnswer = CorrectAnswer,
+                CurrentQuestion = currentQuestionIndex.ToString()
+
             };
 
             _Quiz.Clear();
