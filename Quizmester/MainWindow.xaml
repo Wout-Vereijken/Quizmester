@@ -86,7 +86,7 @@
             </Setter>
         </Style>
 
-        <!-- Answer Button Styles (Kahoot Colors) -->
+        <!-- Answer Button Styles  -->
         <Style x:Key="AnswerButtonRed" TargetType="Button">
             <Setter Property="Background" Value="#E21B3C"/>
             <Setter Property="Foreground" Value="White"/>
@@ -109,10 +109,10 @@
                                         Points="20,20 40,30 20,40" 
                                         HorizontalAlignment="Left" 
                                         VerticalAlignment="Center"
-                                        Margin="20,0,0,0"/>
+                                        Margin="10,-10,0,0"/>
                                 <ContentPresenter HorizontalAlignment="Center" 
                                                 VerticalAlignment="Center"
-                                                Margin="40,0,20,0"/>
+                                                Margin="0,0,0,0"/>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -155,7 +155,7 @@
                                           Margin="20,0,0,0"/>
                                 <ContentPresenter HorizontalAlignment="Center" 
                                                 VerticalAlignment="Center"
-                                                Margin="40,0,20,0"/>
+                                                Margin="20,0,20,0"/>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -191,14 +191,21 @@
                                 CornerRadius="15"
                                 BorderThickness="{TemplateBinding BorderThickness}">
                             <Grid>
-                                <Polygon Fill="White" 
-                                        Points="15,15 35,15 25,35" 
-                                        HorizontalAlignment="Left" 
-                                        VerticalAlignment="Center"
-                                        Margin="20,0,0,0"/>
+                                <Rectangle Fill="White"
+                                   Width="20"
+                                   Height="20"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Center"
+                                   Margin="-10,30,0,0">
+                                    <Rectangle.RenderTransform>
+                                        <RotateTransform Angle="45"
+                                             CenterX="50"
+                                             CenterY="50"/>
+                                    </Rectangle.RenderTransform>
+                                </Rectangle>
                                 <ContentPresenter HorizontalAlignment="Center" 
                                                 VerticalAlignment="Center"
-                                                Margin="40,0,20,0"/>
+                                                Margin="0,0,0,0"/>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -235,7 +242,7 @@
                                 BorderThickness="{TemplateBinding BorderThickness}">
                             <Grid>
                                 <Ellipse Fill="White" 
-                                        Width="20" Height="20"
+                                        Width="30" Height="30"
                                         HorizontalAlignment="Left" 
                                         VerticalAlignment="Center"
                                         Margin="20,0,0,0"/>
@@ -639,7 +646,11 @@
                     <GradientStop Color="#130f40" Offset="1"/>
                 </RadialGradientBrush>
             </Grid.Background>
-
+            <Grid x:Name="Overlay"
+              Background="Red"
+              Opacity="0"
+              Visibility="Collapsed"
+              Panel.ZIndex="99" />
             <ItemsControl ItemsSource="{Binding Quiz}" 
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center">
@@ -724,12 +735,12 @@
                                    Tag="4"/>
                                 </Grid>
 
-                                <!-- Timer Display (UPDATED: Moved outside Grid for simplicity, fixed binding) -->
+                                <!-- Timer Display-->
                                 <StackPanel Orientation="Horizontal" 
                                   HorizontalAlignment="Center"
                                   Margin="0,30,0,0">
                                     <TextBlock Text="⏰" FontSize="24" Margin="0,0,10,0"/>
-                                    <!-- UPDATED: Bind to parent's TimerText using RelativeSource. Remove x:Name since we're using binding. -->
+                                    <!--Bind to parent's TimerText using RelativeSource. -->
                                     <TextBlock Text="{Binding DataContext.TimerText, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
                                      FontSize="20" 
                                      Margin="10"

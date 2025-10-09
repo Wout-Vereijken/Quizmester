@@ -5,6 +5,7 @@ using System.Numerics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 namespace Quizmester
 {
     public partial class MainWindow : Window
@@ -265,7 +266,25 @@ namespace Quizmester
             }
         }
 
+        public async void ShowOverlay(Color color, double seconds)
+        {
+            // Set overlay color and make it visible
+            Overlay.Background = new SolidColorBrush(color);
+            Overlay.Background.Opacity = 0.5;
+            Overlay.Visibility = Visibility.Visible;
 
+            // Animate opacity to 1 (fully visible)
+            var fadeIn = new DoubleAnimation(1, TimeSpan.FromMilliseconds(100));
+            Overlay.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+
+            // Wait for the given duration
+            await Task.Delay(TimeSpan.FromSeconds(seconds));
+
+            // Fade out and hide
+            var fadeOut = new DoubleAnimation(0, TimeSpan.FromMilliseconds(300));
+            fadeOut.Completed += (s, e) => Overlay.Visibility = Visibility.Collapsed;
+            Overlay.BeginAnimation(UIElement.OpacityProperty, fadeOut);
+        }
 
         #endregion
         // answer quiz questions
@@ -274,12 +293,14 @@ namespace Quizmester
         {
             AnsweredQuestions = 1;
             currentQuizLoader.LoadNextQuestion(AnsweredQuestions);
+            ShowOverlay(Colors.Green, 1.0);
         }
 
         private void AnswerTwo(object sender, RoutedEventArgs e)
         {
             AnsweredQuestions = 2;
             currentQuizLoader.LoadNextQuestion(AnsweredQuestions);
+            ShowOverlay(Colors.Red, 1.0);
         }
 
         private void AnswerThree(object sender, RoutedEventArgs e)

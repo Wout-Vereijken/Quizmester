@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel; // For INotifyPropertyChanged
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
 namespace Quizmester
@@ -42,6 +44,7 @@ namespace Quizmester
         string answerFour;
         int CorrectAnswer;
         int currentQuestionIndex;
+        int Score;
 
         // Timer fields
         private DispatcherTimer _timer;
@@ -92,7 +95,7 @@ namespace Quizmester
         private void Timer_Tick(object sender, EventArgs e)
         {
             _timeLeft--;
-            TimerText = _timeLeft; // Use the property to notify UI (replaces ChangetimerText call)
+            TimerText = _timeLeft; // Use the property to notify UI
             Console.WriteLine($"Time left: {_timeLeft}");
 
             if (_timeLeft <= 0)
@@ -116,18 +119,20 @@ namespace Quizmester
             answeredQuestion = AnsweredQuestions;
             currentQuestionIndex++;
             questionId++;
-
+            var mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
             if (answeredQuestion == CorrectAnswer)
             {
-                MessageBox.Show("Correct!");
+                mainWindow.ShowOverlay(Colors.Green, 1);
+                Score++;
             }
             else if (answeredQuestion != -1)
             {
-                MessageBox.Show("Incorrect!");
+                mainWindow.ShowOverlay(Colors.Red, 1);
             }
 
             GetQuestion();
         }
+
 
         // Get the first questionId for this quiz
         public void GetQuestionId()
