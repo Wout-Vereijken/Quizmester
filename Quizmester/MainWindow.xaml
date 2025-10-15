@@ -569,6 +569,12 @@
                                       FontSize="20" FontWeight="Light"
                                       Foreground="#EEEEEE"
                                       HorizontalAlignment="Center"/>
+                            <Button Name="CreateQuizButton"
+                                    Content="CREATE QUIZ"
+                                    Width="180" Height="50"
+                                    Style="{StaticResource PrimaryButtonStyle}"
+                                    Margin="0,20,0,0"
+                                    Click="OnCreateQuiz"/>
                         </StackPanel>
                     </Grid>
 
@@ -760,7 +766,119 @@
             </ItemsControl>
         </Grid>
 
+        <!-- Quiz Maker Screen -->
+        <Grid x:Name="QuizMakeScreen" Visibility="Collapsed">
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#1e3799" Offset="0"/>
+                    <GradientStop Color="#0c2461" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
 
+            <Border Background="White"
+                    CornerRadius="25"
+                    Padding="40"
+                    Width="700"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="10" BlurRadius="25" Opacity="0.3"/>
+                </Border.Effect>
+
+                <StackPanel>
+                    <!-- Header -->
+                    <TextBlock Text="🧠 CREATE A NEW QUIZ"
+                       FontSize="32" FontWeight="Bold"
+                       Foreground="#2C3E50"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,20"/>
+
+                    <!-- Quiz Name -->
+                    <TextBlock Text="Quiz Title:" FontWeight="SemiBold" Foreground="#7F8C8D"/>
+                    <TextBox x:Name="QuizTitleInput"
+                     Text="Enter quiz title..."
+                     Margin="0,5,0,20"
+                     FontSize="16"/>
+
+                    <!-- Quiz Name -->
+                    <TextBlock Text="Quiz description:" FontWeight="SemiBold" Foreground="#7F8C8D"/>
+                    <TextBox x:Name="QuizDescriptionInput"
+                         Text="Enter quiz title..."
+                         Margin="0,5,0,20"
+                         FontSize="16"/>
+
+                    <!-- save button -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Content="Save Question"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            Width="200" Height="50"
+                            Click="SaveQuiz_button"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Grid x:Name="QuizMakeScreen2" Visibility="Collapsed">
+
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#1e3799" Offset="0"/>
+                    <GradientStop Color="#0c2461" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+            <Border Background="White"
+                    CornerRadius="25"
+                    Padding="40"
+                    Width="700"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="10" BlurRadius="25" Opacity="0.3"/>
+                </Border.Effect>
+
+                <StackPanel>
+                    <TextBlock Text="Question:" FontWeight="SemiBold" Foreground="#7F8C8D"/>
+                    <TextBox x:Name="QuestionInput"
+                 Text="Enter question text..."
+                 Margin="0,5,0,20"
+                 FontSize="16" Height="60" TextWrapping="Wrap"/>
+
+                    <!-- Answer Options -->
+                    <TextBlock Text="Answers:" FontWeight="SemiBold" Foreground="#7F8C8D" Margin="0,0,0,10"/>
+                    <UniformGrid Columns="2" Rows="2" Margin="0,0,0,20" HorizontalAlignment="Stretch">
+                        <TextBox x:Name="Answer1Input" Text="Answer 1" Margin="5" FontSize="16"/>
+                        <TextBox x:Name="Answer2Input" Text="Answer 2" Margin="5" FontSize="16"/>
+                        <TextBox x:Name="Answer3Input" Text="Answer 3" Margin="5" FontSize="16"/>
+                        <TextBox x:Name="Answer4Input" Text="Answer 4" Margin="5" FontSize="16"/>
+                    </UniformGrid>
+
+                    <!-- Correct Answer -->
+                    <TextBlock Text="Correct Answer (1–4):" FontWeight="SemiBold" Foreground="#7F8C8D"/>
+                    <ComboBox x:Name="CorrectAnswerInput"
+                  Margin="0,5,0,30"
+                  FontSize="16"
+                  SelectedIndex="0">
+                        <ComboBoxItem Content="1"/>
+                        <ComboBoxItem Content="2"/>
+                        <ComboBoxItem Content="3"/>
+                        <ComboBoxItem Content="4"/>
+                    </ComboBox>
+
+                    <!-- Buttons -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Content="Save Question"
+                    Style="{StaticResource PrimaryButtonStyle}"
+                    Width="200" Height="50"
+                    Click="SaveQuestion_Click"/>
+
+                        <Button Content="Back"
+                    Style="{StaticResource SecondaryButtonStyle}"
+                    Width="150" Height="50"
+                    Click="BackToMain_Click"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
         <!-- Admin Screen -->
         <Grid x:Name="AdminScreen" Visibility="Collapsed">
             <Grid.Background>

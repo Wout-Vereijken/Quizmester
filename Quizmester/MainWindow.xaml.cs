@@ -17,7 +17,9 @@ namespace Quizmester
             LoginScreen,
             CreateAccountScreen,
             QuizChoiceScreen,
-            QuizScreen
+            QuizScreen,
+            QuizMakeScreen,
+            QuizMakeScreen2
         }
 
         private MediaPlayer player = new MediaPlayer();
@@ -25,7 +27,8 @@ namespace Quizmester
         // Database connection string
         string connectionString = "Server=localhost;Database=quizmester;Uid=root;Pwd=;";
         private QuizQuestionLoader currentQuizLoader;
-
+        long quizId;
+        long questionId;
         private QuizQuestions _changer;
 
         public MainWindow()
@@ -84,6 +87,14 @@ namespace Quizmester
         {
             ShowScreen(CurrentScreen.CreateAccountScreen);
         }
+        private void OnCreateQuiz(object sender, RoutedEventArgs e)
+        {
+            ShowScreen(CurrentScreen.QuizMakeScreen);
+        }
+        private void BackToMain_Click(object sender, RoutedEventArgs e)
+        {
+            ShowScreen(CurrentScreen.QuizChoiceScreen);
+        }
 
         private void ShowScreen(CurrentScreen screen)
         {
@@ -93,6 +104,8 @@ namespace Quizmester
             CreateAccountScreen.Visibility = Visibility.Collapsed;
             QuizChoiceScreen.Visibility = Visibility.Collapsed;
             QuizScreen.Visibility = Visibility.Collapsed;
+            QuizMakeScreen.Visibility = Visibility.Collapsed;
+            QuizMakeScreen2.Visibility = Visibility.Collapsed;
 
             // Show selected screen
             switch (screen)
@@ -111,6 +124,12 @@ namespace Quizmester
                     break;
                 case CurrentScreen.QuizScreen:
                     QuizScreen.Visibility = Visibility.Visible;
+                    break;
+                case CurrentScreen.QuizMakeScreen:
+                    QuizMakeScreen.Visibility = Visibility.Visible;
+                    break;
+                case CurrentScreen.QuizMakeScreen2:
+                    QuizMakeScreen2.Visibility = Visibility.Visible;
                     break;
             }
         }
@@ -318,6 +337,103 @@ namespace Quizmester
         public void changeClockText(int time)
         {
             //MyTextBlock.Text = $"Time left:{time}";
+        }
+
+        private void SaveQuiz_button(object sender, RoutedEventArgs e)
+        {
+            string title = QuizTitleInput.Text;
+            string description = QuizDescriptionInput.Text;
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+
+                    // Insert quiz
+                    string sql = "INSERT INTO quizzes (QuizTitle, QuizDescription) VALUES (@title, @description)";
+                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@title", title);
+                        cmd.Parameters.AddWithValue("@description", description);
+                        cmd.ExecuteNonQuery();
+
+                        // Get new QuizId
+                        quizId = cmd.LastInsertedId;
+                    }
+
+                    MessageBox.Show($"Quiz created successfully! QuizId = {quizId}");
+
+                    QuizTitleInput.Text = "";
+                    QuizDescriptionInput.Text = "";
+                    ShowScreen(CurrentScreen.QuizMakeScreen2);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
+            }
+        }
+
+        private void SaveQuestion_Click(object sender, RoutedEventArgs e)
+        {
+            string question = QuestionInput.Text;
+            string a1 = Answer1Input.Text;
+            string a2 = Answer2Input.Text;
+            string a3 = Answer3Input.Text;
+            string a4 = Answer4Input.Text;
+            int correct = CorrectAnswerInput.SelectedIndex + 1;
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+
+                    // Insert question
+                    string sql = "INSERT INTO questions (QuizId, QuestionText) VALUES (@quizId, @question)";
+                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@quizId", quizId);
+                        cmd.Parameters.AddWithValue("@question", question);
+                        cmd.ExecuteNonQuery();
+
+                        // Get the QuestionId AFTER executing
+                        questionId = cmd.LastInsertedId;
+                    }
+
+                    // Insert answers (corrected column names)
+                    string query = @"INSERT INTO answers 
+                (QuizId, QuestionId, AnswerOne, AnswerTwo, AnswerThree, AnswerFour, CorrectAnswer) 
+                VALUES (@quizId, @questionId, @a1, @a2, @a3, @a4, @correct)";
+
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@quizId", quizId);
+                        cmd.Parameters.AddWithValue("@questionId", questionId);
+                        cmd.Parameters.AddWithValue("@a1", a1);
+                        cmd.Parameters.AddWithValue("@a2", a2);
+                        cmd.Parameters.AddWithValue("@a3", a3);
+                        cmd.Parameters.AddWithValue("@a4", a4);
+                        cmd.Parameters.AddWithValue("@correct", correct);
+                        cmd.ExecuteNonQuery(); // ← Execute it!
+                    }
+
+                    MessageBox.Show("Question and answers saved successfully!");
+
+                    // Clear inputs
+                    QuestionInput.Text = "";
+                    Answer1Input.Text = "";
+                    Answer2Input.Text = "";
+                    Answer3Input.Text = "";
+                    Answer4Input.Text = "";
+                    CorrectAnswerInput.SelectedIndex = -1;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
+            }
         }
 
     }
