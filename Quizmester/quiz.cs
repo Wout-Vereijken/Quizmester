@@ -68,7 +68,7 @@ namespace Quizmester
                     string allCategories = string.Join("\n",
                         _QuizChoice.Select(q => $"{q.QuizTitle}: {q.QuizDescription}"));
 
-                    MessageBox.Show("Available Quizzes:\n" + allCategories);
+                    //MessageBox.Show("Available Quizzes:\n" + allCategories);
                 }
                 catch (Exception ex)
                 {

@@ -313,7 +313,7 @@ namespace Quizmester
                             long UserPermission = Convert.ToInt64(result);
                             bool isAdmin = UserPermission == 1;
 
-                            MessageBox.Show("Login successful!");
+                            //MessageBox.Show("Login successful!");
                             UserName = UsernameBox.Text;
                             UsernameBox.Text = "";
                             PasswordBox.Password = "";
@@ -493,7 +493,7 @@ namespace Quizmester
                         cmd.Parameters.AddWithValue("@a3", a3);
                         cmd.Parameters.AddWithValue("@a4", a4);
                         cmd.Parameters.AddWithValue("@correct", correct);
-                        cmd.ExecuteNonQuery(); // ← Execute it!
+                        cmd.ExecuteNonQuery(); //execute 
                     }
 
                     MessageBox.Show("Question and answers saved successfully!");
