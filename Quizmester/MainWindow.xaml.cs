@@ -86,6 +86,7 @@ namespace Quizmester
         private void BackButton(object sender, RoutedEventArgs e)
         {
             ShowScreen(CurrentScreen.WelcomeScreen);
+            DataContext = new Quiz();
         }
         private void CreateAccountButton(object sender, RoutedEventArgs e)
         {
@@ -98,6 +99,7 @@ namespace Quizmester
         private void BackToMain_Click(object sender, RoutedEventArgs e)
         {
             ShowScreen(CurrentScreen.QuizChoiceScreen);
+            DataContext = new Quiz();
         }
 
 
