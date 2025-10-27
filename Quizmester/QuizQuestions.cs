@@ -119,10 +119,7 @@ namespace Quizmester
         {
             LoadNextQuestion(answeredQuestion);
         }
-        public void useJoker()
-        {
 
-        }
 
         public void LoadNextQuestion(int answeredQuestion)
         {
@@ -143,6 +140,7 @@ namespace Quizmester
             }
             else
             {
+                Score--;
                 //MessageBox.Show($"Wrong!\nQuestion: {currentQuestionIndex}\nScore: {Score}");
                 mainWindow.ShowOverlay(Colors.Red, 1);
             } 
@@ -248,6 +246,31 @@ namespace Quizmester
                 }
             }
         }
+        public void useJoker()
+        {
+            if (CorrectAnswer == 1)
+            {
+                answerTwo = "";
+                answerThree = "";
+            }
+            else if (CorrectAnswer == 2)
+            {
+                answerOne = "";
+                answerFour = "";
+            }
+            else if (CorrectAnswer == 3)
+            {
+                answerOne = "";
+                answerFour = "";
+            }
+            else if (CorrectAnswer == 4)
+            {
+                answerTwo = "";
+                answerThree = "";
+            }
+
+            ShowQuestion();
+        }
 
         public QuizQuestions ShowQuestion()
         {
@@ -270,5 +293,7 @@ namespace Quizmester
             StartTimer(30); // give 30 seconds per question
             return question;
         }
+
+
     }
 }
