@@ -2,11 +2,13 @@
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel; // For INotifyPropertyChanged
+using System.Diagnostics.Eventing.Reader;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using static Quizmester.MainWindow;
 
 namespace Quizmester
 {
@@ -27,9 +29,9 @@ namespace Quizmester
         public int TimerText { get; set; }
     }
 
-    public class QuizQuestionLoader : INotifyPropertyChanged // NEW: Implement INotifyPropertyChanged
+    public class QuizQuestionLoader : INotifyPropertyChanged 
     {
-        public event PropertyChangedEventHandler PropertyChanged; // NEW: Required for notifications
+        public event PropertyChangedEventHandler PropertyChanged; 
 
         private readonly ObservableCollection<QuizQuestions> _Quiz;
         public ObservableCollection<QuizQuestions> Quiz => _Quiz;
@@ -51,7 +53,7 @@ namespace Quizmester
         private DispatcherTimer _timer;
         private int _timeLeft;
 
-        // NEW: Public property to expose the timer value for binding. This will notify the UI when changed.
+        // Public property to expose the timer value for binding. This will notify the UI when changed.
         public int TimerText
         {
             get => _timeLeft;
@@ -113,28 +115,51 @@ namespace Quizmester
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void LoadNextQuestion(int AnsweredQuestions)
+        public void skipQuestion(int answeredQuestion)
+        {
+            LoadNextQuestion(answeredQuestion);
+        }
+        public void useJoker()
+        {
+
+        }
+
+        public void LoadNextQuestion(int answeredQuestion)
         {
             _timer.Stop(); // stop timer when user answers
 
-            answeredQuestion = AnsweredQuestions;
-            currentQuestionIndex++;
-            questionId++;
-            var mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+
             if (answeredQuestion == CorrectAnswer)
             {
                 Score++;
-                MessageBox.Show($"question: {currentQuestionIndex} \n Score: {Score}");
+                //MessageBox.Show($"Correct!\nQuestion: {currentQuestionIndex}\nScore: {Score}");
                 mainWindow.ShowOverlay(Colors.Green, 1);
             }
-            else if (answeredQuestion != -1)
+            else if (answeredQuestion == 5)
             {
-                MessageBox.Show($"question: {currentQuestionIndex} \n Score: {Score}");
+                //MessageBox.Show($"Time's up!\nQuestion: {currentQuestionIndex}\nScore: {Score}");
+                mainWindow.ShowOverlay(Colors.Yellow, 1);
+            }
+            else
+            {
+                //MessageBox.Show($"Wrong!\nQuestion: {currentQuestionIndex}\nScore: {Score}");
                 mainWindow.ShowOverlay(Colors.Red, 1);
+            } 
+
+            currentQuestionIndex++;
+            questionId++;
+
+            if (currentQuestionIndex > 20)
+            {
+                MessageBox.Show($"Quiz Over!\nFinal Score: {Score}/20");
+                MainWindow.SwitchTo(CurrentScreen.leaderBoardScreen, Score);
+                return;
             }
 
             GetQuestion();
         }
+
 
 
         // Get the first questionId for this quiz
@@ -163,6 +188,7 @@ namespace Quizmester
                 }
             }
         }
+
 
         // Get question text
         public void GetQuestion()

@@ -12,7 +12,7 @@ namespace Quizmester
     public partial class MainWindow : Window
     {
         // Enum to track current screen
-        private enum CurrentScreen
+        public enum CurrentScreen
         {
             WelcomeScreen,
             LoginScreen,
@@ -21,7 +21,8 @@ namespace Quizmester
             QuizScreen,
             QuizMakeScreen,
             QuizMakeScreen2,
-            AdminScreen
+            AdminScreen,
+            leaderBoardScreen
         }
 
         private MediaPlayer player = new MediaPlayer();
@@ -32,7 +33,8 @@ namespace Quizmester
         long quizId;
         long questionId;
         private QuizQuestions _changer;
-
+        string UserName;
+        long userId;
         public MainWindow()
         {
             InitializeComponent();
@@ -102,6 +104,7 @@ namespace Quizmester
         private void ShowScreen(CurrentScreen screen)
         {
             // Hide all screens first
+            leaderBoardScreen.Visibility = Visibility.Collapsed;
             WelcomeScreen.Visibility = Visibility.Collapsed;
             LoginScreen.Visibility = Visibility.Collapsed;
             CreateAccountScreen.Visibility = Visibility.Collapsed;
@@ -138,6 +141,72 @@ namespace Quizmester
                 case CurrentScreen.AdminScreen:
                     AdminScreen.Visibility = Visibility.Visible;
                     break;
+                case CurrentScreen.leaderBoardScreen:
+                    leaderBoardScreen.Visibility = Visibility.Visible;
+                    break;
+            }
+        }
+
+        public static void SwitchTo(CurrentScreen screen, int score)
+        {
+            if (Application.Current.MainWindow is MainWindow mw)
+            {
+                // Toon het scherm
+                mw.ShowScreen(screen);
+
+                // Alleen als we naar leaderboard gaan
+                if (screen == CurrentScreen.leaderBoardScreen)
+                {
+                    // Insert the score using the instance
+                    mw.insertScore(score);
+
+                    using (MySqlConnection conn = new MySqlConnection(mw.connectionString))
+                    {
+                        conn.Open();
+                        MySqlDataAdapter LeaderBoardAdapter = new MySqlDataAdapter("SELECT * FROM LeaderBoard", conn);
+                        DataTable LeaderBoardTable = new DataTable();
+                        LeaderBoardAdapter.Fill(LeaderBoardTable);
+                        mw.LeaderBoardGrid.ItemsSource = LeaderBoardTable.DefaultView;
+                    }
+                }
+            }
+        }
+
+        private void JokerButton(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("50/50 Joker used!");
+            currentQuizLoader.useJoker();
+        }
+
+        private void SkipButton(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Question skipped!");
+            currentQuizLoader.skipQuestion(5);
+        }
+
+
+        private void insertScore(int score)
+        {
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    // Insert score
+                    string sql = "INSERT INTO leaderboard (LeaderBoardUserName, LeaderBoardScore, UserId) VALUES (@userName, @score, @UserId)";
+                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@userName", UserName);
+                        cmd.Parameters.AddWithValue("@score", score);
+                        cmd.Parameters.AddWithValue("@UserId", userId);
+                        cmd.ExecuteNonQuery();
+                    }
+                    MessageBox.Show("Score saved successfully!");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
             }
         }
 
@@ -233,6 +302,8 @@ namespace Quizmester
                         cmd.Parameters.AddWithValue("@user", user);
                         cmd.Parameters.AddWithValue("@pass", pass);
 
+                        userId = cmd.LastInsertedId;
+
                         object result = cmd.ExecuteScalar();
 
                         if (result != null)
@@ -241,9 +312,10 @@ namespace Quizmester
                             bool isAdmin = UserPermission == 1;
 
                             MessageBox.Show("Login successful!");
+                            UserName = UsernameBox.Text;
                             UsernameBox.Text = "";
                             PasswordBox.Password = "";
-
+                            
                             if (isAdmin)
                             {
                                 LoadAdminData();
@@ -317,14 +389,12 @@ namespace Quizmester
         {
             AnsweredQuestions = 1;
             currentQuizLoader.LoadNextQuestion(AnsweredQuestions);
-            ShowOverlay(Colors.Green, 1.0);
         }
 
         private void AnswerTwo(object sender, RoutedEventArgs e)
         {
             AnsweredQuestions = 2;
             currentQuizLoader.LoadNextQuestion(AnsweredQuestions);
-            ShowOverlay(Colors.Red, 1.0);
         }
 
         private void AnswerThree(object sender, RoutedEventArgs e)
@@ -464,6 +534,12 @@ namespace Quizmester
                 DataTable questionsTable = new DataTable();
                 questionsAdapter.Fill(questionsTable);
                 QuestionsGrid.ItemsSource = questionsTable.DefaultView;
+
+                //load answeres
+                MySqlDataAdapter answerAdaper = new MySqlDataAdapter("SELECT * FROM Answers", conn);
+                DataTable AnswerTable = new DataTable();
+                answerAdaper.Fill(AnswerTable);
+                AnsweresGrid.ItemsSource = AnswerTable.DefaultView;
             }
         }
 
@@ -548,5 +624,7 @@ namespace Quizmester
                 MessageBox.Show("Please select a Quiz to delete.");
             }
         }
+
+
     }
 }

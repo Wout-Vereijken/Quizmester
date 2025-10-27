@@ -748,10 +748,9 @@
                                 </Grid>
                                 <StackPanel>
 
-                                    <Button Content="skip"
-                                        />
-                                    <Button Content="joker"
-                                        />
+                                    <Button Content="skip" Click="SkipButton"/>
+                                    <Button Content="joker" Click="JokerButton"/>
+
                                 </StackPanel>
                                 <!-- Timer Display-->
                                 <StackPanel Orientation="Horizontal" 
@@ -1013,11 +1012,100 @@
                                 </Grid>
                             </ScrollViewer>
                         </TabItem>
+                        <!-- aNSWERS TAB -->
+                        <TabItem Header="Answers">
+                            <ScrollViewer>
+                                <Grid Margin="10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- question list -->
+                                    <DataGrid x:Name="AnsweresGrid"
+                                          AutoGenerateColumns="True"
+                                          IsReadOnly="False"
+                                          Grid.Row="0"
+                                          Margin="0,0,0,10"
+                                          AlternatingRowBackground="#F7F9FA"
+                                          BorderBrush="#BDC3C7"
+                                          BorderThickness="1"/>
+
+                                    <!-- Buttons -->
+                                    <StackPanel Orientation="Horizontal"
+                                            HorizontalAlignment="Right"
+                                            Grid.Row="1">
+                                        <Button Content="Save Changes" Width="120" Click="SaveQuizes_click"/>
+                                        <Button Content="Delete Question" Width="120" Click="DeleteQuizes_click"/>
+                                    </StackPanel>
+                                </Grid>
+                            </ScrollViewer>
+                        </TabItem>
                     </TabControl>
                 </DockPanel>
             </Border>
         </Grid>
+        
+        <Grid x:Name="leaderBoardScreen" Visibility="Collapsed">
+            <!-- Background -->
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#1e3799" Offset="0"/>
+                    <GradientStop Color="#0c2461" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
 
+            <!-- Leaderboard Card -->
+            <Border Background="White"
+                CornerRadius="25"
+                Padding="40"
+                Width="700"
+                Height="500"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="10" BlurRadius="25" Opacity="0.3"/>
+                </Border.Effect>
+
+                <StackPanel>
+                    <!-- Header -->
+                    <TextBlock Text="🏆 LEADERBOARD"
+                           FontSize="36" FontWeight="Bold"
+                           Foreground="#2C3E50"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,20"/>
+
+                    <!-- DataGrid for scores -->
+                    <ScrollViewer>
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- question list -->
+                            <DataGrid x:Name="LeaderBoardGrid"
+                                          AutoGenerateColumns="True"
+                                          IsReadOnly="False"
+                                          Grid.Row="0"
+                                          Margin="0,0,0,10"
+                                          AlternatingRowBackground="#F7F9FA"
+                                          BorderBrush="#BDC3C7"
+                                          BorderThickness="1"/>
+
+                        </Grid>
+                    </ScrollViewer>
+
+                    <!-- Back Button -->
+                    <Button Content="Back to Main Menu"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Width="250" Height="50"
+                        HorizontalAlignment="Center"
+                        Margin="0,20,0,0"
+                        Click="BackButton"/>
+                </StackPanel>
+            </Border>
+        </Grid>
 
     </Grid>
 </Window>
