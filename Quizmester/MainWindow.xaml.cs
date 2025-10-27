@@ -1,5 +1,6 @@
 ﻿using Google.Protobuf.Reflection;
 using MySql.Data.MySqlClient;
+using System.Data;
 using System.Net.NetworkInformation;
 using System.Numerics;
 using System.Windows;
@@ -19,7 +20,8 @@ namespace Quizmester
             QuizChoiceScreen,
             QuizScreen,
             QuizMakeScreen,
-            QuizMakeScreen2
+            QuizMakeScreen2,
+            AdminScreen
         }
 
         private MediaPlayer player = new MediaPlayer();
@@ -96,6 +98,7 @@ namespace Quizmester
             ShowScreen(CurrentScreen.QuizChoiceScreen);
         }
 
+
         private void ShowScreen(CurrentScreen screen)
         {
             // Hide all screens first
@@ -106,6 +109,7 @@ namespace Quizmester
             QuizScreen.Visibility = Visibility.Collapsed;
             QuizMakeScreen.Visibility = Visibility.Collapsed;
             QuizMakeScreen2.Visibility = Visibility.Collapsed;
+            AdminScreen.Visibility = Visibility.Collapsed;
 
             // Show selected screen
             switch (screen)
@@ -130,6 +134,9 @@ namespace Quizmester
                     break;
                 case CurrentScreen.QuizMakeScreen2:
                     QuizMakeScreen2.Visibility = Visibility.Visible;
+                    break;
+                case CurrentScreen.AdminScreen:
+                    AdminScreen.Visibility = Visibility.Visible;
                     break;
             }
         }
@@ -210,8 +217,6 @@ namespace Quizmester
                 MessageBox.Show("Please enter both username and password.");
                 return;
             }
-            // Placeholder for admin check logic
-            bool isAdmin = false;
 
             string sql = "SELECT COUNT(*) FROM users WHERE UserName = @user AND UserPassword = @pass";
 
@@ -220,34 +225,34 @@ namespace Quizmester
                 try
                 {
                     conn.Open();
-                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+
+                    string sequal = "SELECT UserPermission FROM users WHERE UserName = @user AND UserPassword = @pass";
+
+                    using (MySqlCommand cmd = new MySqlCommand(sequal, conn))
                     {
                         cmd.Parameters.AddWithValue("@user", user);
                         cmd.Parameters.AddWithValue("@pass", pass);
 
-                        int count = Convert.ToInt32(cmd.ExecuteScalar());
+                        object result = cmd.ExecuteScalar();
 
-                        if (count > 0)
+                        if (result != null)
                         {
+                            long UserPermission = Convert.ToInt64(result);
+                            bool isAdmin = UserPermission == 1;
+
                             MessageBox.Show("Login successful!");
                             UsernameBox.Text = "";
                             PasswordBox.Password = "";
 
-                            // TODO: Navigate to quiz screen or admin screen
                             if (isAdmin)
                             {
-                                // Navigate to admin screen
-                                ShowScreen(CurrentScreen.WelcomeScreen);
+                                LoadAdminData();
+                                ShowScreen(CurrentScreen.AdminScreen);
                             }
                             else
                             {
-                                // Load quizzes for regular user
-                                //LoadQuizList();
-                                // Navigate to user quiz screen
                                 ShowScreen(CurrentScreen.QuizChoiceScreen);
                             }
-                            // Navigate to quiz screen
-
                         }
                         else
                         {
@@ -436,5 +441,112 @@ namespace Quizmester
             }
         }
 
+        private void LoadAdminData()
+        {
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+
+                // Load users
+                MySqlDataAdapter usersAdapter = new MySqlDataAdapter("SELECT * FROM users", conn);
+                DataTable usersTable = new DataTable();
+                usersAdapter.Fill(usersTable);
+                UsersGrid.ItemsSource = usersTable.DefaultView;
+
+                // Load quizzes
+                MySqlDataAdapter quizzesAdapter = new MySqlDataAdapter("SELECT * FROM quizzes", conn);
+                DataTable quizzesTable = new DataTable();
+                quizzesAdapter.Fill(quizzesTable);
+                QuizzesGrid.ItemsSource = quizzesTable.DefaultView;
+
+                //load questions
+                MySqlDataAdapter questionsAdapter = new MySqlDataAdapter("SELECT * FROM questions", conn);
+                DataTable questionsTable = new DataTable();
+                questionsAdapter.Fill(questionsTable);
+                QuestionsGrid.ItemsSource = questionsTable.DefaultView;
+            }
+        }
+
+        private void SaveUsers_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    MySqlDataAdapter adapter = new MySqlDataAdapter("SELECT * FROM users", conn);
+                    MySqlCommandBuilder builder = new MySqlCommandBuilder(adapter);
+
+                    // Important: ensures the DataAdapter knows the primary key
+                    adapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
+
+                    // Get the original bound DataTable, not a copy
+                    DataView view = (DataView)UsersGrid.ItemsSource;
+                    DataTable usersTable = view.Table;
+
+                    adapter.Update(usersTable); // now it updates existing rows correctly
+
+                    MessageBox.Show("User changes saved!");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error saving users: " + ex.Message);
+            }
+
+        }
+        private void DeleteUser_Click(object sender, RoutedEventArgs e)
+        {
+            if (UsersGrid.SelectedItem is DataRowView selectedRow)
+            {
+                selectedRow.Row.Delete();
+            }
+            else
+            {
+                MessageBox.Show("Please select a user to delete.");
+            }
+        }
+
+        private void SaveQuizes_click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    MySqlDataAdapter adapter = new MySqlDataAdapter("SELECT * FROM quizzes", conn);
+                    MySqlCommandBuilder builder = new MySqlCommandBuilder(adapter);
+
+                    // Important: ensures the DataAdapter knows the primary key
+                    adapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
+
+                    // Get the original bound DataTable, not a copy
+                    DataView view = (DataView)QuizzesGrid.ItemsSource;
+                    DataTable quiztable = view.Table;
+
+                    adapter.Update(quiztable); // now it updates existing rows correctly
+
+                    MessageBox.Show("quiz changes saved!");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error saving users: " + ex.Message);
+            }
+        }
+
+        private void DeleteQuizes_click(object sender, RoutedEventArgs e)
+        {
+            if (QuizzesGrid.SelectedItem is DataRowView selectedRow)
+            {
+                selectedRow.Row.Delete();
+            }
+            else
+            {
+                MessageBox.Show("Please select a Quiz to delete.");
+            }
+        }
     }
 }

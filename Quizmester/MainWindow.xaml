@@ -746,7 +746,13 @@
                                        Click="AnswerFour"
                                        Tag="4"/>
                                 </Grid>
+                                <StackPanel>
 
+                                    <Button Content="skip"
+                                        />
+                                    <Button Content="joker"
+                                        />
+                                </StackPanel>
                                 <!-- Timer Display-->
                                 <StackPanel Orientation="Horizontal" 
                                   HorizontalAlignment="Center"
@@ -888,36 +894,130 @@
                 </LinearGradientBrush>
             </Grid.Background>
 
-            <Border Background="White" 
-                    CornerRadius="25" 
-                    Padding="50" 
-                    Width="600" 
-                    Height="400"
-                    HorizontalAlignment="Center" 
-                    VerticalAlignment="Center">
+            <Border Background="White"
+            CornerRadius="25"
+            Padding="30"
+            Width="900"
+            Height="600"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="10" BlurRadius="20" Opacity="0.3"/>
                 </Border.Effect>
 
-                <StackPanel>
-                    <TextBlock Text="🔧 ADMIN PANEL"
-                              FontSize="36" FontWeight="Bold"
-                              Foreground="#2C3E50"
-                              HorizontalAlignment="Center"
-                              Margin="0,0,0,30"/>
+                <DockPanel>
+                    <!-- Header -->
+                    <StackPanel DockPanel.Dock="Top" Margin="0,0,0,20">
+                        <TextBlock Text="🔧 ADMIN PANEL"
+                           FontSize="36"
+                           FontWeight="Bold"
+                           Foreground="#2C3E50"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,20"/>
 
-                    <TextBlock Text="Admin features coming soon!"
-                              FontSize="18"
-                              Foreground="#7F8C8D"
-                              HorizontalAlignment="Center"
-                              Margin="0,0,0,40"/>
+                        <Button Content="BACK TO MAIN"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        HorizontalAlignment="Center"
+                        Width="200" Height="40"
+                        Click="BackButton"/>
+                    </StackPanel>
 
-                    <Button Content="BACK TO MAIN"
-                            Style="{StaticResource PrimaryButtonStyle}"
-                            HorizontalAlignment="Center"
-                            Width="200" Height="50"/>
-                </StackPanel>
+                    <!-- Tabs for managing Users & Quizzes -->
+                    <TabControl>
+                        <!-- USERS TAB -->
+                        <TabItem Header="👥 Accounts">
+                            <ScrollViewer>
+                                <Grid Margin="10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- User list -->
+                                    <DataGrid x:Name="UsersGrid"
+                                      AutoGenerateColumns="True"
+                                      IsReadOnly="False"
+                                      Grid.Row="0"
+                                      Margin="0,0,0,10"
+                                      AlternatingRowBackground="#F7F9FA"
+                                      BorderBrush="#BDC3C7"
+                                      BorderThickness="1"/>
+
+                                    <!-- Buttons -->
+                                    <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Right"
+                                        Grid.Row="1">
+                                        <Button Content="Save Changes" Width="120" Click="SaveUsers_Click" />
+                                        <Button Content="Delete User" Width="120" Click="DeleteUser_Click"/>
+                                    </StackPanel>
+                                </Grid>
+                            </ScrollViewer>
+                        </TabItem>
+
+                        <!-- QUIZZES TAB -->
+                        <TabItem Header="🧠 Quizzes">
+                            <ScrollViewer>
+                                <Grid Margin="10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Quiz list -->
+                                    <DataGrid x:Name="QuizzesGrid"
+                                          AutoGenerateColumns="True"
+                                          IsReadOnly="False"
+                                          Grid.Row="0"
+                                          Margin="0,0,0,10"
+                                          AlternatingRowBackground="#F7F9FA"
+                                          BorderBrush="#BDC3C7"
+                                          BorderThickness="1"/>
+
+                                    <!-- Buttons -->
+                                    <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Right"
+                                        Grid.Row="1">
+                                        <Button Content="Save Changes" Width="120" Click="SaveQuizes_click"/>
+                                        <Button Content="Delete Quiz" Width="120" Click="DeleteQuizes_click"/>
+                                    </StackPanel>
+                                </Grid>
+                            </ScrollViewer>
+                        </TabItem>
+
+                        <!-- QUESTIONSTAB TAB -->
+                        <TabItem Header="Questions">
+                            <ScrollViewer>
+                                <Grid Margin="10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- question list -->
+                                    <DataGrid x:Name="QuestionsGrid"
+                                          AutoGenerateColumns="True"
+                                          IsReadOnly="False"
+                                          Grid.Row="0"
+                                          Margin="0,0,0,10"
+                                          AlternatingRowBackground="#F7F9FA"
+                                          BorderBrush="#BDC3C7"
+                                          BorderThickness="1"/>
+
+                                    <!-- Buttons -->
+                                    <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Right"
+                                        Grid.Row="1">
+                                        <Button Content="Save Changes" Width="120" Click="SaveQuizes_click"/>
+                                        <Button Content="Delete Question" Width="120" Click="DeleteQuizes_click"/>
+                                    </StackPanel>
+                                </Grid>
+                            </ScrollViewer>
+                        </TabItem>
+                    </TabControl>
+                </DockPanel>
             </Border>
         </Grid>
+
+
     </Grid>
 </Window>
