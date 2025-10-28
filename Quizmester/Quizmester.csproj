@@ -9,10 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="images\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="MySql.Data" Version="9.4.0" />
   </ItemGroup>
 

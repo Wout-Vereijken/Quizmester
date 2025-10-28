@@ -45,7 +45,7 @@ namespace Quizmester
             // Set DataContext for data binding
             DataContext = new Quiz();
 
-            string musicPath = @"C:\Users\woutv\source\repos\Quizmester\Quizmester\music\MapleStory (2006 GMS) 2-Hour Music Compilation.mp3";
+            string musicPath = @"C:\Users\woutv\source\repos\Quizmester\Quizmester\images\MapleStory (2006 GMS) 2-Hour Music Compilation.mp3";
 
             player.Open(new Uri(musicPath, UriKind.Absolute));
             player.MediaEnded += (s, e) => player.Position = TimeSpan.Zero; // optional: loop
@@ -317,7 +317,7 @@ namespace Quizmester
                             UserName = UsernameBox.Text;
                             UsernameBox.Text = "";
                             PasswordBox.Password = "";
-                            
+
                             if (isAdmin)
                             {
                                 LoadAdminData();

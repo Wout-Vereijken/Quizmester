@@ -123,8 +123,8 @@ namespace Quizmester
             {
                 if (isSpecialQuestion)
                 {
-                    Score += 3; 
-                    mainWindow.ShowOverlay(Colors.Gold, 1.5);
+                    Score += 3;
+                    mainWindow.ShowOverlay(Colors.Green, 1.5);
                 }
                 else
                 {

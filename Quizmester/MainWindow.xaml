@@ -740,7 +740,7 @@
                                        Click="AnswerThree"
                                        Tag="3"/>
 
-                                    <Button Grid.Row="1" Grid.Column="1"
+                                    <Button x:Name="button4" Grid.Row="1" Grid.Column="1"
                                        Content="{Binding QuizAnswerFour}"
                                        Style="{StaticResource AnswerButtonGreen}"
                                        Click="AnswerFour"
@@ -1045,7 +1045,7 @@
                 </DockPanel>
             </Border>
         </Grid>
-        
+
         <Grid x:Name="leaderBoardScreen" Visibility="Collapsed">
             <!-- Background -->
             <Grid.Background>
