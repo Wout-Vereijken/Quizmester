@@ -30,11 +30,14 @@ namespace Quizmester
         // Database connection string
         string connectionString = "Server=localhost;Database=quizmester;Uid=root;Pwd=;";
         private QuizQuestionLoader currentQuizLoader;
+        private SpecialQuizQuestionLoader specialQuiz;
         long quizId;
         long questionId;
         private QuizQuestions _changer;
         string UserName;
         long userId;
+        bool IsspecialQuiz = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -177,13 +180,28 @@ namespace Quizmester
         private void JokerButton(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("50/50 Joker used!");
-            currentQuizLoader.useJoker();
+            if (IsspecialQuiz)
+            {
+                specialQuiz.useJoker();
+            }
+            else
+            {
+                currentQuizLoader.useJoker();
+            }
         }
 
         private void SkipButton(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Question skipped!");
-            currentQuizLoader.skipQuestion(5);
+            if (IsspecialQuiz)
+            {
+                specialQuiz.skipQuestion(5);
+
+            }
+            else
+            {
+                currentQuizLoader.skipQuestion(5);
+            }
         }
 
 
@@ -348,19 +366,29 @@ namespace Quizmester
         {
             if (sender is Button button && button.CommandParameter is string quizId)
             {
+                if (IsspecialQuiz)
+                {
+                    // Start the Special Quiz
+                    MessageBox.Show("Starting Special Quiz!");
+                    specialQuiz = new SpecialQuizQuestionLoader(quizId);
+                    DataContext = specialQuiz;
+                }
+                else
+                {
+                    // Start the Normal Quiz
+                    currentQuizLoader = new QuizQuestionLoader(quizId);
+                    DataContext = currentQuizLoader;
+                }
 
-                // Create one instance of the loader
-                currentQuizLoader = new QuizQuestionLoader(quizId);
+                // Bind to DataContext
 
 
-                // Bind it to DataContext
-                DataContext = currentQuizLoader;
-
+                // Show quiz screen
                 ShowScreen(CurrentScreen.QuizScreen);
             }
             else
             {
-                MessageBox.Show("Not working");
+                MessageBox.Show("Quiz ID not found or invalid button!");
             }
         }
 
@@ -390,25 +418,54 @@ namespace Quizmester
         private void AnswerOne(object sender, RoutedEventArgs e)
         {
             AnsweredQuestions = 1;
-            currentQuizLoader.LoadNextQuestion(AnsweredQuestions);
+            if (IsspecialQuiz)
+            {
+                specialQuiz.LoadNextQuestion(AnsweredQuestions);
+            }
+            else
+            {
+                currentQuizLoader.LoadNextQuestion(AnsweredQuestions);
+            }
         }
 
         private void AnswerTwo(object sender, RoutedEventArgs e)
         {
             AnsweredQuestions = 2;
-            currentQuizLoader.LoadNextQuestion(AnsweredQuestions);
+            if (IsspecialQuiz)
+            {
+                specialQuiz.LoadNextQuestion(AnsweredQuestions);
+            }
+            else
+            {
+                currentQuizLoader.LoadNextQuestion(AnsweredQuestions);
+            }
+
         }
 
         private void AnswerThree(object sender, RoutedEventArgs e)
         {
             AnsweredQuestions = 3;
-            currentQuizLoader.LoadNextQuestion(AnsweredQuestions);
+            if (IsspecialQuiz)
+            {
+                specialQuiz.LoadNextQuestion(AnsweredQuestions);
+            }
+            else
+            {
+                currentQuizLoader.LoadNextQuestion(AnsweredQuestions);
+            }
         }
 
         private void AnswerFour(object sender, RoutedEventArgs e)
         {
             AnsweredQuestions = 4;
-            currentQuizLoader.LoadNextQuestion(AnsweredQuestions);
+            if (IsspecialQuiz)
+            {
+                specialQuiz.LoadNextQuestion(AnsweredQuestions);
+            }
+            else
+            {
+                currentQuizLoader.LoadNextQuestion(AnsweredQuestions);
+            }
         }
 
         public void changeClockText(int time)
@@ -624,6 +681,33 @@ namespace Quizmester
             else
             {
                 MessageBox.Show("Please select a Quiz to delete.");
+            }
+        }
+
+        private void HandleCheck(object sender, RoutedEventArgs e)
+        {
+            RadioButton rb = sender as RadioButton;
+
+            if (rb != null && rb.IsChecked == true)
+            {
+                IsspecialQuiz = true;
+            }
+            else
+            {
+                IsspecialQuiz = false;
+            }
+        }
+        private void HandleCheckFalse(object sender, RoutedEventArgs e)
+        {
+            RadioButton rb = sender as RadioButton;
+
+            if (rb != null && rb.IsChecked == true)
+            {
+                IsspecialQuiz = false;
+            }
+            else
+            {
+                IsspecialQuiz = true;
             }
         }
 

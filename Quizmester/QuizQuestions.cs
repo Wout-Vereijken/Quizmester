@@ -3,6 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Media;
+using System.Numerics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -38,6 +39,7 @@ namespace Quizmester
         private int Score;
         private int CorrectAnswer;
         private string questionText, answerOne, answerTwo, answerThree, answerFour;
+        private MediaPlayer player = new MediaPlayer();
 
         // Special question system
         private int specialQuestionIndex;
@@ -271,7 +273,11 @@ namespace Quizmester
 
             if (isSpecialQuestion)
             {
-                SystemSounds.Exclamation.Play();
+                string musicPath = @"C:\Users\woutv\source\repos\Quizmester\Quizmester\images\maplestory-lvl-up.mp3";
+
+                player.MediaEnded -= (s, e) => player.Position = TimeSpan.Zero;
+                player.Open(new Uri(musicPath, UriKind.Absolute));
+                player.Play();
 
                 // Change design 
                 var mainWindow = Application.Current.MainWindow as MainWindow;
