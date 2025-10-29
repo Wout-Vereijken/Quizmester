@@ -51,8 +51,10 @@ namespace Quizmester
             string musicPath = @"C:\Users\woutv\source\repos\Quizmester\Quizmester\images\MapleStory (2006 GMS) 2-Hour Music Compilation.mp3";
 
             player.Open(new Uri(musicPath, UriKind.Absolute));
-            player.MediaEnded += (s, e) => player.Position = TimeSpan.Zero; // optional: loop
+            player.Volume = 0.1;
+            player.MediaEnded -= (s, e) => player.Position = TimeSpan.Zero;
             player.Play();
+
         }
         //testing database connection
         #region Debugging

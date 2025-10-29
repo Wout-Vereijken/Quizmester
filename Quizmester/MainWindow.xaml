@@ -682,11 +682,23 @@
                     <GradientStop Color="#130f40" Offset="1"/>
                 </RadialGradientBrush>
             </Grid.Background>
+            <!-- Close Button -->
+            <Button Content="✕"
+                Width="60" Height="60"
+                FontSize="24" FontWeight="Bold"
+                Background="#E74C3C" Foreground="White"
+                BorderThickness="0"
+                HorizontalAlignment="Right" VerticalAlignment="Top"
+                Margin="30"
+                Style="{StaticResource SecondaryButtonStyle}"
+                Click="BackToMain_Click"/>
+
             <Grid x:Name="Overlay"
               Background="Red"
               Opacity="0"
               Visibility="Collapsed"
               Panel.ZIndex="99" />
+
             <ItemsControl ItemsSource="{Binding Quiz}" 
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center">
@@ -830,7 +842,15 @@
                     <GradientStop Color="#0c2461" Offset="1"/>
                 </LinearGradientBrush>
             </Grid.Background>
-
+            <Button Content="✕"
+                Width="60" Height="60"
+                FontSize="24" FontWeight="Bold"
+                Background="#E74C3C" Foreground="White"
+                BorderThickness="0"
+                HorizontalAlignment="Right" VerticalAlignment="Top"
+                Margin="30"
+                Style="{StaticResource SecondaryButtonStyle}"
+                Click="BackToMain_Click"/>
             <Border Background="White"
                     CornerRadius="25"
                     Padding="40"
@@ -882,6 +902,15 @@
                     <GradientStop Color="#0c2461" Offset="1"/>
                 </LinearGradientBrush>
             </Grid.Background>
+            <Button Content="✕"
+                Width="60" Height="60"
+                FontSize="24" FontWeight="Bold"
+                Background="#E74C3C" Foreground="White"
+                BorderThickness="0"
+                HorizontalAlignment="Right" VerticalAlignment="Top"
+                Margin="30"
+                Style="{StaticResource SecondaryButtonStyle}"
+                Click="BackToMain_Click"/>
             <Border Background="White"
                     CornerRadius="25"
                     Padding="40"
