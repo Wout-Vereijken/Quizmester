@@ -145,17 +145,31 @@ namespace Quizmester
             }
 
             currentQuestionIndex++;
-            questionId++;
 
-            if (currentQuestionIndex > 20)
+            // Dynamically fetch the next question from DB
+            string nextQuestionSql = $"SELECT QuestionId FROM Questions WHERE QuizId = {_quizId} AND QuestionId > {questionId} ORDER BY QuestionId ASC LIMIT 1";
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                MessageBox.Show($"Quiz Over!\nFinal Score: {Score}/20");
-                MainWindow.SwitchTo(CurrentScreen.leaderBoardScreen, Score);
-                return;
+                conn.Open();
+                using (MySqlCommand cmd = new MySqlCommand(nextQuestionSql, conn))
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        questionId = reader.GetInt32("QuestionId");
+                        GetQuestion();
+                    }
+                    else
+                    {
+                        // No more questions left 
+                        MessageBox.Show($"Quiz Over!\nFinal Score: {Score}");
+                        MainWindow.SwitchTo(CurrentScreen.leaderBoardScreen, Score);
+                    }
+                }
             }
-
-            GetQuestion();
         }
+
 
         public void GetQuestionId()
         {
@@ -199,6 +213,13 @@ namespace Quizmester
                         {
                             questionText = reader.GetString("QuestionText");
                         }
+                        else
+                        {
+                            // ❌ No more questions found — end the quiz
+                            MessageBox.Show($"No more questions available!\nFinal Score: {Score}");
+                            MainWindow.SwitchTo(CurrentScreen.leaderBoardScreen, Score);
+                            return;
+                        }
                     }
                     GetAnswers();
                 }
@@ -208,6 +229,7 @@ namespace Quizmester
                 }
             }
         }
+
 
         public void GetAnswers()
         {
