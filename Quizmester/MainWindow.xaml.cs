@@ -686,6 +686,88 @@ namespace Quizmester
             }
         }
 
+        private void SaveQUestions_click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    MySqlDataAdapter adapter = new MySqlDataAdapter("SELECT * FROM questions", conn);
+                    MySqlCommandBuilder builder = new MySqlCommandBuilder(adapter);
+
+                    // Important: ensures the DataAdapter knows the primary key
+                    adapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
+
+                    // Get the original bound DataTable, not a copy
+                    DataView view = (DataView)QuizzesGrid.ItemsSource;
+                    DataTable quiztable = view.Table;
+
+                    adapter.Update(quiztable); // now it updates existing rows correctly
+
+                    MessageBox.Show("questions changes saved!");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error saving users: " + ex.Message);
+            }
+        }
+
+        private void DeleteQuestions_click(object sender, RoutedEventArgs e)
+        {
+            if (QuizzesGrid.SelectedItem is DataRowView selectedRow)
+            {
+                selectedRow.Row.Delete();
+            }
+            else
+            {
+                MessageBox.Show("Please select a Quiz to delete.");
+            }
+        }
+
+        private void SaveAnsweres_click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    MySqlDataAdapter adapter = new MySqlDataAdapter("SELECT * FROM questions", conn);
+                    MySqlCommandBuilder builder = new MySqlCommandBuilder(adapter);
+
+                    // Important: ensures the DataAdapter knows the primary key
+                    adapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
+
+                    // Get the original bound DataTable, not a copy
+                    DataView view = (DataView)QuizzesGrid.ItemsSource;
+                    DataTable quiztable = view.Table;
+
+                    adapter.Update(quiztable); // now it updates existing rows correctly
+
+                    MessageBox.Show("questions changes saved!");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error saving users: " + ex.Message);
+            }
+        }
+
+        private void DeleteAnsweres_click(object sender, RoutedEventArgs e)
+        {
+            if (QuizzesGrid.SelectedItem is DataRowView selectedRow)
+            {
+                selectedRow.Row.Delete();
+            }
+            else
+            {
+                MessageBox.Show("Please select a Quiz to delete.");
+            }
+        }
+
         private void HandleCheck(object sender, RoutedEventArgs e)
         {
             RadioButton rb = sender as RadioButton;
@@ -712,7 +794,5 @@ namespace Quizmester
                 IsspecialQuiz = true;
             }
         }
-
-
     }
 }

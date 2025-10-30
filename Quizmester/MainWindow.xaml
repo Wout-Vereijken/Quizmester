@@ -544,16 +544,28 @@
 
             <ScrollViewer VerticalScrollBarVisibility="Hidden">
                 <StackPanel>
+
                     <!-- Header Section -->
                     <Grid Height="auto" Margin="0,0,0,50">
+
                         <Grid.Background>
                             <RadialGradientBrush>
                                 <GradientStop Color="#FF6B35" Offset="0"/>
                                 <GradientStop Color="#FF8C42" Offset="1"/>
                             </RadialGradientBrush>
                         </Grid.Background>
-
+                        <!-- Close Button -->
+                        <Button Content="✕"
+                            Width="60" Height="60"
+                            FontSize="24" FontWeight="Bold"
+                            Background="#E74C3C" Foreground="White"
+                            BorderThickness="0"
+                            HorizontalAlignment="Right" VerticalAlignment="Top"
+                            Margin="30"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Click="ExitApplicationButton"/>
                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+
                             <TextBlock Text="🎮" 
                                       FontSize="80"
                                       HorizontalAlignment="Center"
@@ -605,6 +617,7 @@
                                     Style="{StaticResource PrimaryButtonStyle}"
                                     Margin="0,0,0,20"
                                     Click="OnCreateQuiz"/>
+
                         </StackPanel>
                     </Grid>
 
@@ -673,7 +686,6 @@
             </ScrollViewer>
         </Grid>
 
-        <!-- Quiz Screen -->
         <!-- Quiz Screen -->
         <Grid x:Name="QuizScreen" Visibility="Visible">
             <Grid.Background>
@@ -1005,13 +1017,12 @@
                     <TabControl>
                         <!-- USERS TAB -->
                         <TabItem Header="👥 Accounts">
-                            <ScrollViewer>
-                                <Grid Margin="10">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-
+                            <Grid Margin="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <ScrollViewer>
                                     <!-- User list -->
                                     <DataGrid x:Name="UsersGrid"
                                       AutoGenerateColumns="True"
@@ -1021,26 +1032,25 @@
                                       AlternatingRowBackground="#F7F9FA"
                                       BorderBrush="#BDC3C7"
                                       BorderThickness="1"/>
-
-                                    <!-- Buttons -->
-                                    <StackPanel Orientation="Horizontal"
+                                </ScrollViewer>
+                                <StackPanel Orientation="Horizontal"
                                         HorizontalAlignment="Right"
                                         Grid.Row="1">
-                                        <Button Content="Save Changes" Width="120" Click="SaveUsers_Click" />
-                                        <Button Content="Delete User" Width="120" Click="DeleteUser_Click"/>
-                                    </StackPanel>
-                                </Grid>
-                            </ScrollViewer>
+                                    <Button Content="Save Changes" Width="120" Click="SaveUsers_Click" />
+                                    <Button Content="Delete User" Width="120" Click="DeleteUser_Click"/>
+                                </StackPanel>
+                            </Grid>
                         </TabItem>
 
                         <!-- QUIZZES TAB -->
                         <TabItem Header="🧠 Quizzes">
-                            <ScrollViewer>
-                                <Grid Margin="10">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
+                            <Grid Margin="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <ScrollViewer>
+
 
                                     <!-- Quiz list -->
                                     <DataGrid x:Name="QuizzesGrid"
@@ -1052,25 +1062,26 @@
                                           BorderBrush="#BDC3C7"
                                           BorderThickness="1"/>
 
-                                    <!-- Buttons -->
-                                    <StackPanel Orientation="Horizontal"
+                                </ScrollViewer>
+                                <!-- Buttons -->
+                                <StackPanel Orientation="Horizontal"
                                         HorizontalAlignment="Right"
                                         Grid.Row="1">
-                                        <Button Content="Save Changes" Width="120" Click="SaveQuizes_click"/>
-                                        <Button Content="Delete Quiz" Width="120" Click="DeleteQuizes_click"/>
-                                    </StackPanel>
-                                </Grid>
-                            </ScrollViewer>
+                                    <Button Content="Save Changes" Width="120" Click="SaveQuizes_click"/>
+                                    <Button Content="Delete Quiz" Width="120" Click="DeleteQuizes_click"/>
+                                </StackPanel>
+                            </Grid>
                         </TabItem>
 
                         <!-- QUESTIONSTAB TAB -->
                         <TabItem Header="Questions">
-                            <ScrollViewer>
-                                <Grid Margin="10">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
+                            <Grid Margin="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <ScrollViewer>
+
 
                                     <!-- question list -->
                                     <DataGrid x:Name="QuestionsGrid"
@@ -1082,24 +1093,26 @@
                                           BorderBrush="#BDC3C7"
                                           BorderThickness="1"/>
 
-                                    <!-- Buttons -->
-                                    <StackPanel Orientation="Horizontal"
+
+                                </ScrollViewer>
+                                <!-- Buttons -->
+                                <StackPanel Orientation="Horizontal"
                                         HorizontalAlignment="Right"
                                         Grid.Row="1">
-                                        <Button Content="Save Changes" Width="120" Click="SaveQuizes_click"/>
-                                        <Button Content="Delete Question" Width="120" Click="DeleteQuizes_click"/>
-                                    </StackPanel>
-                                </Grid>
-                            </ScrollViewer>
+                                    <Button Content="Save Changes" Width="120" Click="SaveQUestions_click"/>
+                                    <Button Content="Delete Question" Width="120" Click="DeleteQuestions_click"/>
+                                </StackPanel>
+                            </Grid>
                         </TabItem>
                         <!-- aNSWERS TAB -->
                         <TabItem Header="Answers">
-                            <ScrollViewer>
-                                <Grid Margin="10">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
+                            <Grid Margin="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <ScrollViewer>
+
 
                                     <!-- question list -->
                                     <DataGrid x:Name="AnsweresGrid"
@@ -1111,15 +1124,16 @@
                                           BorderBrush="#BDC3C7"
                                           BorderThickness="1"/>
 
-                                    <!-- Buttons -->
-                                    <StackPanel Orientation="Horizontal"
+
+                                </ScrollViewer>
+                                <!-- Buttons -->
+                                <StackPanel Orientation="Horizontal"
                                             HorizontalAlignment="Right"
                                             Grid.Row="1">
-                                        <Button Content="Save Changes" Width="120" Click="SaveQuizes_click"/>
-                                        <Button Content="Delete Question" Width="120" Click="DeleteQuizes_click"/>
-                                    </StackPanel>
-                                </Grid>
-                            </ScrollViewer>
+                                    <Button Content="Save Changes" Width="120" Click="SaveAnsweres_click"/>
+                                    <Button Content="Delete Question" Width="120" Click="DeleteAnsweres_click"/>
+                                </StackPanel>
+                            </Grid>
                         </TabItem>
                     </TabControl>
                 </DockPanel>
