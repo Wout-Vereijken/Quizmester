@@ -563,7 +563,7 @@
                             HorizontalAlignment="Right" VerticalAlignment="Top"
                             Margin="30"
                             Style="{StaticResource SecondaryButtonStyle}"
-                            Click="ExitApplicationButton"/>
+                            Click="BackButton"/>
                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
 
                             <TextBlock Text="🎮" 
